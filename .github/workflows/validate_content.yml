@@ -1,0 +1,24 @@
+name: Validate exam content
+
+on:
+  push:
+    paths:
+      - 'content/exam/**'
+      - 'pubspec.yaml'
+      - '.github/workflows/validate_content.yml'
+  pull_request:
+    paths:
+      - 'content/exam/**'
+      - 'pubspec.yaml'
+      - '.github/workflows/validate_content.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+      - run: dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json content/exam/questions.jsonl

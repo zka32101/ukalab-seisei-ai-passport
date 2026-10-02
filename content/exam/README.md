@@ -1,0 +1,32 @@
+# 試験データ（生成AIパスポート）
+
+- `seisei_ai_passport.json`: ExamConfig（試験定義）。`yourwish_kentei` の `ExamConfig.fromJson` で読む。
+- `questions.jsonl`: 問題データ（JSON Lines、1行1問）。
+
+## シラバスの版について
+
+GUGA公式シラバス「2027年2月試験より適用」版に基づく章構成（ch1〜ch5）を `subjectId` に採用している。
+詳細は Google Drive の設計書を参照:
+- `ukalab_生成AIパスポート_シラバス確認_v1_1.md`（新旧シラバス比較、章別の学習項目）
+- `ukalab_生成AIパスポート_企画設計書_v0_3差分（新シラバス対応）.md`（問題量配分・画期的な機能の章対応）
+
+## 現在の問題データの状態
+
+`questions.jsonl` の10問は、**pubspec・ExamConfig・検証パイプラインの土台が機能することを確認するためのサンプル（骨組み）**であり、本番配信用の約400問ではない。すべて `source: original`（シラバスのキーワードに基づく自作）。
+
+本番化までに必要な作業（未着手）:
+1. 章別の目標問題数まで拡充する（提案配分: 1章60／2章90／3章90／4章110／5章50、計約400。`…企画設計書_v0_3差分` 参照）
+2. 各問題を類似チェック・運営者確認のフローに通す
+3. GUGA公式サイトでの最終シラバス・過去問の利用条件の確認（`…シラバス確認_v1_1.md` の未決事項を参照）
+
+## 検証方法（配信前・CI）
+
+`yourwish_kentei` の検証CLIを使う。
+
+```bash
+dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json content/exam/questions.jsonl
+```
+
+問題が1件でもあれば終了コード1。チェック内容（出典必須・ID重複・選択肢数・正解の一意性 等）は `yourwish_kentei` の `question_validator.dart` を参照。
+
+この環境には Dart/Flutter SDK が無いため、本リポジトリでは未実行。`flutter pub get` 可能な開発環境（Windows・英語パス推奨。`ukalab_共通基盤_各資格アプリ向けガイド_v0_2.md` §6 参照）で実行して確認すること。

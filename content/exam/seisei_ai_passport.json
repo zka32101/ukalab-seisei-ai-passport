@@ -1,0 +1,22 @@
+{
+  "examId": "seisei_ai_passport",
+  "name": "生成AIパスポート",
+  "audience": "adult",
+  "subjects": [
+    { "subjectId": "ch1", "name": "AIの基礎と歴史", "order": 1 },
+    { "subjectId": "ch2", "name": "生成AI", "order": 2 },
+    { "subjectId": "ch3", "name": "AIエージェント", "order": 3 },
+    { "subjectId": "ch4", "name": "生成AIのリスク予防・AI倫理・ガバナンス", "order": 4 },
+    { "subjectId": "ch5", "name": "生成AIの実践と活用事例", "order": 5 }
+  ],
+  "levels": [
+    {
+      "levelId": "standard",
+      "name": "生成AIパスポート（模擬試験）",
+      "questionCount": 60,
+      "timeLimitSec": 3600,
+      "passRule": { "totalPct": 70 }
+    }
+  ],
+  "examDates": []
+}
