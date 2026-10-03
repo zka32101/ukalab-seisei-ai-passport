@@ -1,0 +1,32 @@
+name: ukalab_seisei_ai_passport
+description: "うかラボ 生成AIパスポート。生成AIパスポート試験（GUGA）の学習アプリ。追加モジュール: 生成AI導入実務者検定（GAIP）。"
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.0
+  flutter: ">=1.17.0"
+
+# 依存の向き: 本リポジトリ（薄いアプリ） → yourwish_kentei（試験エンジン） → app_common_kit（共通部品）。
+# タグ固定（ref: vX.Y.Z）。main は参照しない（タグは不変）。
+dependencies:
+  flutter:
+    sdk: flutter
+  app_common_kit:
+    git:
+      url: https://github.com/zka32101/app_common_kit.git
+      ref: v0.2.0
+  yourwish_kentei:
+    git:
+      url: https://github.com/zka32101/yourwish_kentei.git
+      ref: v0.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - content/exam/
