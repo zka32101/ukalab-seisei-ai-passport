@@ -23,7 +23,7 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 
 ## 用語データの状態
 
-`terms.jsonl` は68語（1章12／2章15／3章15／4章16／5章10）。「用語マップ」機能（画期的な機能⑤、G検定・ITパスポートと部品共通）向けの初期データで、本番配信用の確定版ではない。各用語は①ひとこと（headline）②正確な意味（definition）③たとえ話（analogy）④紛らわしい用語との違い（commonMistake）⑤関連用語（relatedTermIds）⑥関連問題（relatedQuestionIds、`questions.jsonl` のqidを参照）の構成。シラバス全5章から主要な用語を抽出したもので、残りの拡充は未着手。
+`terms.jsonl` は68語（1章12／2章15／3章15／4章16／5章10）。「用語マップ」機能（画期的な機能⑤、G検定・ITパスポートと部品共通）向けの初期データで、本番配信用の確定版ではない。各用語は①ひとこと（headline）②正確な意味（definition）③たとえ話（analogy）④紛らわしい用語との違い（commonMistake）⑤関連用語（relatedTermIds）⑥関連問題（relatedQuestionIds、`questions.jsonl` のqidを参照）の構成。シラバス全5章から主要な用語を抽出したもので、68語すべてで①〜⑥の構成要素（analogy・commonMistake含む）を作成済み。termId重複・相互参照（relatedTermIds／relatedQuestionIds）の整合性も確認済み。なお「残りの拡充」（シラバス全体のうちまだ抽出していない用語の追加）は未着手。
 
 ## 検証方法（配信前・CI）
 
