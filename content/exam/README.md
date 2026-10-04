@@ -83,6 +83,12 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json content/exam/questions.jsonl
 ```
 
-問題が1件でもあれば終了コード1。チェック内容（出典必須・ID重複・選択肢数・正解の一意性 等）は `yourwish_kentei` の `question_validator.dart` を参照。用語データ（`terms.jsonl`）の検証CLIは `validate_content` にはまだ組み込まれていないため、別途 `validateTerms`（`term_validator.dart`）を呼ぶコードが必要（現状は本リポジトリのCIに未統合）。
+問題が1件でもあれば終了コード1。チェック内容（出典必須・ID重複・選択肢数・正解の一意性 等）は `yourwish_kentei` の `question_validator.dart` を参照。
+
+**用語データのCI統合について（2026-10-04 調査済み）**: 上記の記述（「`validateTerms`を呼ぶコードが必要」）は古い情報だった。`yourwish_kentei`の最新コミット（タグ`v0.2.0`より後、Term機能追加時点）では、`bin/validate_content.dart`が既に`--terms terms.jsonl`オプションに対応しており、`validateTerms`を内部で呼び出す実装になっている（`dart run yourwish_kentei:validate_content exam_config.json --terms terms.jsonl questions.jsonl`で両方検証可能）。
+
+ただし、本リポジトリの`pubspec.yaml`は`ref: v0.2.0`というタグに固定されており、**v0.2.0タグ時点のコードには`--terms`オプションが存在しない**（Term機能はタグ付け後に追加されたコミットのみに含まれる）。ルートREADME記載の運用方針「タグ固定、mainは参照しない」に従う限り、CI workflow（`.github/workflows/validate_content.yml`）に`--terms`を追加しても、v0.2.0のCLIがそのオプションを認識できずCIが失敗する可能性が高い。
+
+→ **本リポジトリのCIへの統合には、`yourwish_kentei`側で新しいタグ（例: v0.3.0）を打つことが前提条件**。これは別リポジトリ側の判断・対応が必要で、本リポジトリの範囲では完結できない。
 
 この環境には Dart/Flutter SDK が無いため、本リポジトリでは未実行。`flutter pub get` 可能な開発環境（Windows・英語パス推奨。`ukalab_共通基盤_各資格アプリ向けガイド_v0_2.md` §6 参照）で実行して確認すること。
