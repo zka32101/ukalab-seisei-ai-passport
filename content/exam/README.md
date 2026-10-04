@@ -3,6 +3,7 @@
 - `seisei_ai_passport.json`: ExamConfig（試験定義）。`yourwish_kentei` の `ExamConfig.fromJson` で読む。
 - `questions.jsonl`: 問題データ（JSON Lines、1行1問）。
 - `terms.jsonl`: 専門用語の解説データ（決定50、JSON Lines、1行1用語）。`yourwish_kentei` の `Term.fromJson` で読む。
+- `prompt_puzzle.jsonl`: 「プロンプト組み立てパズル」機能（画期的な機能①）向けの初期データ（JSON Lines、1行1問）。`yourwish_kentei` にはまだ対応モデルがない（下記「プロンプト組み立てパズルの状態」参照）。
 
 ## シラバスの版について
 
@@ -28,6 +29,16 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 ## 用語データの状態
 
 `terms.jsonl` は68語（1章12／2章15／3章15／4章16／5章10）。「用語マップ」機能（画期的な機能⑤、G検定・ITパスポートと部品共通）向けの初期データで、本番配信用の確定版ではない。各用語は①ひとこと（headline）②正確な意味（definition）③たとえ話（analogy）④紛らわしい用語との違い（commonMistake）⑤関連用語（relatedTermIds）⑥関連問題（relatedQuestionIds、`questions.jsonl` のqidを参照）の構成。シラバス全5章から主要な用語を抽出したもので、68語すべてで①〜⑥の構成要素（analogy・commonMistake含む）を作成済み。termId重複・相互参照（relatedTermIds／relatedQuestionIds）の整合性も確認済み。なお「残りの拡充」（シラバス全体のうちまだ抽出していない用語の追加）は未着手。
+
+## プロンプト組み立てパズルの状態
+
+`prompt_puzzle.jsonl` は10問（すべて5章、既存`questions.jsonl`のch5 topicIdと対応づけ）。「プロンプト組み立てパズル」機能（画期的な機能①、企画設計書§5参照）向けの初期データで、本番配信用の確定版ではない。
+
+**実装状況の確認結果（2026-10-04）**: `yourwish_kentei`・`app_common_kit`の両リポジトリを確認したところ、このパズル機能に対応するモデル・UI部品（境界線スライダー等の「型」）はまだ実装されていない（ルートREADME記載の「学習体験の型はv0.3以降予定」の通り）。そのため、**型の実装を待たずにコンテンツのみ先行作成**した。実装側のデータモデルが確定した際は、本データ構造の見直しが必要になる可能性がある。
+
+各問題は、曖昧なプロンプト（`vaguePrompt`）に対して、役割（role）・目的（objective）・条件（constraint）・形式（format）・例（example）の5種類の部品（`pieces`）をはめて改善する構成。正解部品（`correct: true`）とダミー部品を混在させ、正しい並び順を`idealOrder`で保持。要素が欠けた場合の弱点指摘文を`weakPointHints`に用意。評価はルールベース（要素の有無と順序の判定）を想定しており、AI呼び出しは不要。
+
+未着手: 残り（②これ入力していい？、③ハルシネーション見破り、④AIの歴史と最新動向タイムライン）のコンテンツ先行作成、全5機能分の拡充、型実装後のデータ構造再検証。
 
 ## 検証方法（配信前・CI）
 
