@@ -49,3 +49,14 @@
 - `yourwish_kentei` 側にモデル・検証ロジックは未実装（`lib/term/term.dart` のような `lib/news/news.dart` 相当がまだ無い）。共通基盤側への提案・実装依頼が必要
 - Google Drive に `ukalab_AIニュース候補_2026-10.md` を作成し、2026-10-03時点で手動収集した候補2件を記録（1件は一次情報で確認済み・運営者確認待ち、1件は二次情報のみで要一次情報差し替え）
 - 毎週月曜の定期収集タスクが実際にこのフォルダへ出力しているかは、このアプリ側セッションのスコープ外のため未確認。重複を避けるため、定期タスクの運用状況を人間側で確認することが必要
+
+## `yourwish_kentei` への実装提案（`proposal/`、2026-10-04）
+
+`yourwish_kentei`（別リポジトリ、本セッションはread-onlyでクローン済み・push権限なし）の既存実装（`lib/term/term.dart`・`lib/content/term_validator.dart`）のパターンに忠実に、`News` モデルと検証関数のサンプル実装を作成した。
+
+- `proposal/news.dart`: `News` クラス（上記の配信データ仕様案のフィールドに対応）。`fromJson`/`toJson`を実装。
+- `proposal/news_validator.dart`: `parseNewsJsonl`（JSON Lines読み込み）・`validateNews`（配信前の品質ゲート）。`term_validator.dart`と同様に、`ExamConfig`・既存`Question`一覧を渡すと`examId`・`chapterTags`・`relatedQuestionIds`の整合性も検査する。
+
+**位置づけ**: このリポジトリから `yourwish_kentei` へのpush権限はないため、そのまま `yourwish_kentei` へ取り込めるコード片として用意した（配置先は`yourwish_kentei`の`lib/news/news.dart`・`lib/content/news_validator.dart`相当、`lib/yourwish_kentei.dart`のexportにも追加が必要）。実際の取り込み・PR作成は`yourwish_kentei`側のセッション・権限で行う必要がある。
+
+**未検証の注記**: この環境にはDart/Flutter SDKが無いため、コンパイル・テストは未実行（既存の`question_validator.dart`等の実装パターンを目視で忠実に模倣したのみ）。`yourwish_kentei`側で取り込む際に、`dart analyze`等での検証が必要。
