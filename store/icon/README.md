@@ -14,7 +14,7 @@
 
 - 提案先: `app_common_kit/tools/icon_gen/symbols/sparkle.svg`（本リポジトリでは `proposal/sparkle.svg` に配置）
 - 既存シンボルと同じ規約（viewBox `-50 -50 100 100`、白塗り `fill="#fff"`）で作成。
-- **2026-10-05 確認**: `app_common_kit`（v0.8.0）に`tools/icon_gen/symbols/sparkle.svg`が取り込み済み。ただし`tools/icon_gen/specs/sample.json`には`gen_ai_passport`のエントリはまだ追加されていない（サンプル一覧であり本リポジトリの`icon_spec.json`があれば生成自体は可能なため、必須ではない）。
+- **2026-10-05 訂正**: 当初「`app_common_kit`に`sparkle.svg`が取り込み済み」と記録したが、これは誤り。実際には、このアプリ側セッションが過去に一時クローンしたローカルの`app_common_kit`リポジトリに、Gitで追跡されない（`git status`で`??`扱いの）ファイルとして置いたままのものだった。`git log --all`で全履歴を調べても`sparkle.svg`を追加したコミットは存在せず、`app_common_kit`のリモート（GitHub）には一切反映されていない。取り込みは依然として未着手のまま。
 - `app_common_kit` を一時的にクローンし、`icon_gen.py`・`check_icons.py` を実際に実行して検証済み（この環境にPIL・PyMuPDFがありレンダリング可能だった）。`sparkle`を含む7資格分のアイコンを生成し、`check_icons.py`は全件OK（サイズ・コントラスト4.5:1・要素の重なり・余白・adaptive中央66%・最小サイズ版・**他資格との見分け**を含む）。
 
 ## ファイル
@@ -30,5 +30,5 @@
 **2026-10-05 確定**: シンボル（`sparkle`）・短縮表記（「AIパス」）はユーザー確認済みで最終案として確定。
 
 ## 未着手
-- `tools/icon_gen/specs/sample.json` への `gen_ai_passport`（`symbol: "sparkle"`）追加（サンプル一覧のため必須ではない）
+- `app_common_kit` 側の `tools/icon_gen/symbols/sparkle.svg` の取り込みと、`tools/icon_gen/specs/sample.json` への `gen_ai_passport`（`symbol: "sparkle"`）追加は、本リポジトリからはpush権限がないため未実施（app_common_kit側のセッション・PRで対応が必要）
 - Android/iOSの実アイコンファイルへの反映（`flutter create` 後の `android/`・`ios/` ディレクトリへの配置）は、アプリ本体の実装着手後に行う
