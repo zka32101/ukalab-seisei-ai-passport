@@ -20,15 +20,24 @@
 
 ## ファイル
 - `icon_spec.json`: 生成に使ったspec（`icon_gen.py --spec` の入力）。シンボルは`sparkle`に更新済み。
-- `gen_ai_passport_1024.png`: 1024px の角なし正方形（上段「うかラボ」／中央シンボル／下部に試験名）。`sparkle`シンボルで再生成済み。
-- `gen_ai_passport_fg.png` / `gen_ai_passport_bg.png`: Android adaptive 用の前景・背景。再生成済み。
-- `gen_ai_passport_small_1024.png`: 最小サイズ用（上段省略・シンボル拡大）。再生成済み。
-- `layout.json`: 生成時のレイアウト情報（シンボル変更後も座標は同一、固定比率のため変化なし）。
-- `proposal/sparkle.svg`: `app_common_kit`への提案シンボル。
+- `gen_ai_passport_1024.png`: 1024px の角なし正方形（上段「桜マーク＋うかラボ」／中央シンボル／下部に試験名）。最新テンプレートで再生成済み。
+- `gen_ai_passport_fg.png` / `gen_ai_passport_bg.png`: Android adaptive 用の前景・背景。再生成済み（桜マークは上段のみに影響するため、adaptive前景の中央シンボル自体に変化はない）。
+- `gen_ai_passport_small_1024.png`: 最小サイズ用（上段省略・シンボル拡大）。桜マークは上段にのみ表示されるため、最小サイズ版は変化なし。
+- `layout.json`: 生成時のレイアウト情報（`mark`＝桜マークの座標を追加）。
+- `proposal/sparkle.svg`: `app_common_kit`への提案シンボル（取り込み済み、下記参照）。
 
 `check_icons.py` によるサイズ・コントラスト（4.5:1）・要素の重なり・端の余白・adaptive中央66%・最小サイズ版の検査はOK。
 
 **2026-10-05 確定**: シンボル（`sparkle`）・短縮表記（「AIパス」）はユーザー確認済みで最終案として確定。
+
+## 「うかラボ」ロゴへの桜マーク追加（2026-10-05、テンプレート更新に追従）
+
+`app_common_kit`側で、シリーズ共通のデザイン変更として「うかラボ」の左に合格の象徴となる桜マーク（`symbols/sakura.svg`）を追加する`icon_gen.py`の更新があった（コミット`9403e4b`「feat(icon_gen): 「うかラボ」の左に桜のマークを追加」）。本リポジトリのアイコンもこれに合わせて再生成した。
+
+- `app_common_kit`の最新コミット（`fd55d21`、PR #48マージ後）を取得し、`icon_gen.py --spec icon_spec.json --out <dir> --font <NotoSansCJK-Bold.ttc>`で再生成
+- 全資格分（`tools/icon_gen/specs/sample.json`）もあわせて生成し、`check_icons.py`で他資格との見分け等を含めて検証（OK）
+- 変更があったのは`gen_ai_passport_1024.png`（桜マーク追加）・`gen_ai_passport_fg.png`（座標計算の調整に伴う再生成だが見た目は同一）・`layout.json`（`mark`座標の追加）のみ。`gen_ai_passport_bg.png`・`gen_ai_passport_small_1024.png`は変化なし（桜マークは上段「うかラボ」表示時のみ描画されるため）
+- 同時に追加された「中央のシンボルをPNG画像で差し込める（`symbol_image`）」機能（コミット`750b5a7`）は、既存のSVGシンボル（`sparkle`）方式に影響しない任意機能のため、本リポジトリでは未使用
 
 ## 未着手
 - Android/iOSの実アイコンファイルへの反映（`flutter create` 後の `android/`・`ios/` ディレクトリへの配置）は、アプリ本体の実装着手後に行う
