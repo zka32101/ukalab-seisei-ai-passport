@@ -12,8 +12,9 @@
 
 `app_common_kit/tools/icon_gen/symbols/` には6種類のシンボル（chip・bars・network・bolt・yen・flask）しかなく、全て既存資格に割り当て済みで空きがなかったため、生成AIらしい新規シンボル `sparkle`（スパークル、大小2つの4方向の光の星）を提案・作成した。
 
-- 提案先: `app_common_kit/tools/icon_gen/symbols/sparkle.svg`（本リポジトリでは `proposal/sparkle.svg` に配置。push権限がないため取り込みは別リポジトリ側の対応が必要）
+- 提案先: `app_common_kit/tools/icon_gen/symbols/sparkle.svg`（本リポジトリでは `proposal/sparkle.svg` に配置）
 - 既存シンボルと同じ規約（viewBox `-50 -50 100 100`、白塗り `fill="#fff"`）で作成。
+- **2026-10-05 訂正**: 当初「`app_common_kit`に`sparkle.svg`が取り込み済み」と記録したが、これは誤り。実際には、このアプリ側セッションが過去に一時クローンしたローカルの`app_common_kit`リポジトリに、Gitで追跡されない（`git status`で`??`扱いの）ファイルとして置いたままのものだった。`git log --all`で全履歴を調べても`sparkle.svg`を追加したコミットは存在せず、`app_common_kit`のリモート（GitHub）には一切反映されていない。取り込みは依然として未着手のまま。
 - `app_common_kit` を一時的にクローンし、`icon_gen.py`・`check_icons.py` を実際に実行して検証済み（この環境にPIL・PyMuPDFがありレンダリング可能だった）。`sparkle`を含む7資格分のアイコンを生成し、`check_icons.py`は全件OK（サイズ・コントラスト4.5:1・要素の重なり・余白・adaptive中央66%・最小サイズ版・**他資格との見分け**を含む）。
 
 ## ファイル
