@@ -26,7 +26,8 @@
 
 `check_icons.py` によるサイズ・コントラスト（4.5:1）・要素の重なり・端の余白・adaptive中央66%・最小サイズ版の検査はOK。
 
+**2026-10-05 確定**: シンボル（`sparkle`）・短縮表記（「AIパス」）はユーザー確認済みで最終案として確定。
+
 ## 未着手
 - `app_common_kit` 側の `tools/icon_gen/symbols/sparkle.svg` の取り込みと、`tools/icon_gen/specs/sample.json` への `gen_ai_passport`（`symbol: "sparkle"`）追加は、本リポジトリからはpush権限がないため未実施（app_common_kit側のセッション・PRで対応が必要）
-- シンボル（`sparkle`）・短縮表記の最終案はユーザー確認待ち
 - Android/iOSの実アイコンファイルへの反映（`flutter create` 後の `android/`・`ios/` ディレクトリへの配置）は、アプリ本体の実装着手後に行う
