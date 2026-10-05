@@ -63,7 +63,7 @@
 
 ## 現在の状態
 
-- `yourwish_kentei`（v0.10.0）に `AiNewsItem` モデル・`validateAiNewsItems` 検証ロジックが実装済み。本リポジトリの`pubspec.yaml`もv0.10.0に更新済み
+- `yourwish_kentei`（v0.11.0）に `AiNewsItem` モデル・`validateAiNewsItems` 検証ロジックが実装済み。本リポジトリの`pubspec.yaml`もv0.11.0に更新済み
+- CI（`.github/workflows/validate_content.yml`）に`--ai-news content/news/news.jsonl`を統合済み
 - Google Drive に `ukalab_AIニュース候補_2026-10.md` を作成し、2026-10-03時点で手動収集した候補2件を記録（1件は一次情報で確認済み・運営者確認待ち、1件は二次情報のみで要一次情報差し替え）
 - 毎週月曜の定期収集タスクが実際にこのフォルダへ出力しているかは、このアプリ側セッションのスコープ外のため未確認。重複を避けるため、定期タスクの運用状況を人間側で確認することが必要
-- CI（`validate_content`）への`AiNewsItem`検証の統合は未着手

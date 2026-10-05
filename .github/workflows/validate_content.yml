@@ -23,4 +23,4 @@ jobs:
         with:
           channel: stable
       - run: flutter pub get
-      - run: dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl content/exam/questions.jsonl
+      - run: dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl content/exam/questions.jsonl
