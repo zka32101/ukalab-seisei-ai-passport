@@ -82,15 +82,19 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 `yourwish_kentei` の検証CLIを使う。
 
 ```bash
-dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json content/exam/questions.jsonl
+dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl content/exam/questions.jsonl
 ```
 
 問題が1件でもあれば終了コード1。チェック内容（出典必須・ID重複・選択肢数・正解の一意性 等）は `yourwish_kentei` の `question_validator.dart` を参照。
 
-**用語データのCI統合について（2026-10-04 調査済み）**: 上記の記述（「`validateTerms`を呼ぶコードが必要」）は古い情報だった。`yourwish_kentei`の最新コミット（タグ`v0.2.0`より後、Term機能追加時点）では、`bin/validate_content.dart`が既に`--terms terms.jsonl`オプションに対応しており、`validateTerms`を内部で呼び出す実装になっている（`dart run yourwish_kentei:validate_content exam_config.json --terms terms.jsonl questions.jsonl`で両方検証可能）。
+**2026-10-05: `yourwish_kentei`・`app_common_kit`を最新タグに更新（CI統合完了）**: `pubspec.yaml`の参照タグを`yourwish_kentei`は`v0.2.0`→`v0.10.0`、`app_common_kit`は`v0.2.0`→`v0.8.0`に更新した。これにより、以前の課題（「v0.2.0タグには`--terms`オプションが無い」）は解消。`bin/validate_content.dart`は`--terms`・`--ai-news`の両オプションに対応しており、CI workflow（`.github/workflows/validate_content.yml`）にも両オプションを追加済み。
 
-ただし、本リポジトリの`pubspec.yaml`は`ref: v0.2.0`というタグに固定されており、**v0.2.0タグ時点のコードには`--terms`オプションが存在しない**（Term機能はタグ付け後に追加されたコミットのみに含まれる）。ルートREADME記載の運用方針「タグ固定、mainは参照しない」に従う限り、CI workflow（`.github/workflows/validate_content.yml`）に`--terms`を追加しても、v0.2.0のCLIがそのオプションを認識できずCIが失敗する可能性が高い。
+既存モデルへの変更は全て加算的（新しいenum値・nullableフィールドの追加のみ）で、既存の`questions.jsonl`・`seisei_ai_passport.json`との後方互換性は保たれると判断した（この環境にはDart/Flutter SDKが無いため実機検証はできていない）。
 
-→ **本リポジトリのCIへの統合には、`yourwish_kentei`側で新しいタグ（例: v0.3.0）を打つことが前提条件**。これは別リポジトリ側の判断・対応が必要で、本リポジトリの範囲では完結できない。
+**`yourwish_kentei`に実装された新機能・モデル**:
+- `AiNewsItem`（画期的な機能⑥「今月のAI動向」）: 当初の提案（`News`、`content/news/README.md`参照）とはフィールド名・型が異なる形で実装された。`news.jsonl`は実装済みスキーマに合わせて書き直し済み
+- `Term.era`（用語マップ・AI系譜図向けの時代区分、任意フィールド）: `terms.jsonl`側はまだ未設定（今後の拡充課題）
+- 9種類の学習体験「型」（境界線スライダー・予測→実行・推しの答案を添削・最短ルートプランナー・学習の失敗図鑑・評価指標ラボ・手法の選び方・機械学習ラボ・画像認識の中身を見る・Transformerの注意の可視化）: 大半はG検定・簿記3級など他資格向けで、本リポジトリ固有の画期的な機能①〜④（プロンプト組み立てパズル・これ入力していい？・ハルシネーション見破り・AIの歴史タイムライン）に対応する専用モデルはまだ無い。「Transformerの注意の可視化」「境界線スライダー」は本アプリのシラバス内容と関連しうるため、転用できないか別途検討の余地がある
+- `app_common_kit`にアイコンシンボル`sparkle`が取り込み済み（`store/icon/README.md`参照）
 
 この環境には Dart/Flutter SDK が無いため、本リポジトリでは未実行。`flutter pub get` 可能な開発環境（Windows・英語パス推奨。`ukalab_共通基盤_各資格アプリ向けガイド_v0_2.md` §6 参照）で実行して確認すること。
