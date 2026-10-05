@@ -7,6 +7,9 @@
 - `risk_sorting.jsonl`: 「これ入力していい？」機能（画期的な機能②）向けの初期データ（JSON Lines、1行1問）。`yourwish_kentei` にはまだ対応モデルがない（下記「これ入力していい？の状態」参照）。
 - `hallucination_spotting.jsonl`: 「ハルシネーション見破り」機能（画期的な機能③）向けの初期データ（JSON Lines、1行1問）。`yourwish_kentei` にはまだ対応モデルがない（下記「ハルシネーション見破りの状態」参照）。
 - `ai_timeline.jsonl`: 「AIの歴史と最新動向タイムライン」機能（画期的な機能④）向けの初期データ（JSON Lines、1行1件）。`yourwish_kentei` にはまだ対応モデルがない（下記「AIの歴史と最新動向タイムラインの状態」参照）。
+- `boundary_scenarios.jsonl`: 「境界線スライダー」体験（`yourwish_kentei`の共通基盤機能、`BoundaryScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.11.0の`validateBoundaryScenarios`で検証可能（下記「境界線スライダーの状態」参照）。
+- `attention_viz_scenarios.jsonl`: 「Transformerの注意の可視化」体験（`AttentionVizScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.11.0の`validateAttentionVizScenarios`で検証可能（下記「Transformerの注意の可視化の状態」参照）。
+- `ethics_case_scenarios.jsonl`: 「AI倫理ケース」体験（`EthicsCaseScenario`）向けの初期データ（JSON Lines、1行1ケース）。`yourwish_kentei` v0.11.0の`validateEthicsCaseScenarios`で検証可能（下記「AI倫理ケースの状態」参照）。
 
 ## シラバスの版について
 
@@ -88,12 +91,38 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 
 これで画期的な機能①〜④のコンテンツ先行作成が完了（⑤用語マップ・⑥今月のAI動向は既存データあり）。未着手: 全機能分の拡充、型実装後のデータ構造再検証。
 
+## 境界線スライダーの状態
+
+`boundary_scenarios.jsonl` は10場面（すべて4章、著作権・個人情報・AI倫理・シャドーAI等のリスク判定）。`yourwish_kentei`の共通基盤機能「境界線スライダー」（`BoundaryScenario`、v0.11.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+**2026-10-05 発見**: `yourwish_kentei`に実装された9種類の学習体験「型」のうち、この型は本アプリの画期的な機能②「これ入力していい？」のコンセプトと近いが、より高度（2つ以上の条件を動かすと判定が切り替わる決定木構造）。既存の`risk_sorting.jsonl`（単一場面→単一判定）とは別の体験として、新規にデータを作成した。
+
+各場面は、2つの二値条件（`conditions`、例:「商用目的か」）と、その組み合わせごとの結論・根拠法令（`rules`、`conclusion`・`lawReference`）を持つ構成。`yourwish_kentei`の`validateBoundaryScenarios`が、条件の全組み合わせ（2条件なら4通り）に結論が用意されているか（網羅性）を検証する。判定は「目安」であり法的助言ではない旨を結論文に明記している。
+
+未着手: 全機能分の拡充、運営者確認、既存の`risk_sorting.jsonl`との役割分担の整理（本番化前に要検討）。
+
+## Transformerの注意の可視化の状態
+
+`attention_viz_scenarios.jsonl` は10場面（すべて2章、Transformer・Self-Attentionの働きを示す例文）。`yourwish_kentei`の共通基盤機能「Transformerの注意の可視化」（`AttentionVizScenario`、v0.11.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+各場面は、文を分割した単語（`tokens`、3語以上）と、単語同士の注意の強さを示す行列（`attention`、各行の合計がおよそ1.0）を持つ構成。代名詞の指示対象・形容詞の修飾関係・多義語の意味解消など、Transformerの仕組みを体感できる例文を選定した。`attention`は教育用に用意した固定データで、実モデルの出力ではない（モデルコードのコメントに明記されている仕様に準拠）。`yourwish_kentei`の`validateAttentionVizScenarios`が、行列のサイズ・値の範囲（0.0〜1.0）・各行の正規化を検証する。
+
+未着手: 全機能分の拡充、運営者確認。
+
+## AI倫理ケースの状態
+
+`ethics_case_scenarios.jsonl` は10ケース（すべて4章、公平性・プライバシー・説明責任・著作権・透明性等のテーマ）。`yourwish_kentei`の共通基盤機能「AI倫理ケース」（`EthicsCaseScenario`、v0.11.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+各ケースは、架空の企業・人物を舞台にした場面説明（`caseDescription`）と、2〜3つの判断の選択肢（`options`、ちょうど1つが正解）、正解後に見る解説（`explanation`）を持つ構成。実在の事例は扱わず、架空のケースのみで構成した（モデルコードのコメントが「実在の事例を扱う場合は出典明記・運営者確認が必須」と注記しているため）。`yourwish_kentei`の`validateEthicsCaseScenarios`が、選択肢の正解が1つだけであること等を検証する。
+
+未着手: 全機能分の拡充、運営者確認。
+
 ## 検証方法（配信前・CI）
 
 `yourwish_kentei` の検証CLIを使う。
 
 ```bash
-dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl content/exam/questions.jsonl
+dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl --boundary content/exam/boundary_scenarios.jsonl --attention-viz content/exam/attention_viz_scenarios.jsonl --ethics-case content/exam/ethics_case_scenarios.jsonl content/exam/questions.jsonl
 ```
 
 問題が1件でもあれば終了コード1。チェック内容（出典必須・ID重複・選択肢数・正解の一意性 等）は `yourwish_kentei` の `question_validator.dart` を参照。
