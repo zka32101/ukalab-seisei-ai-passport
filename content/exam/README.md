@@ -82,23 +82,21 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 `yourwish_kentei` の検証CLIを使う。
 
 ```bash
-dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl content/exam/questions.jsonl
+dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl content/exam/questions.jsonl
 ```
 
 問題が1件でもあれば終了コード1。チェック内容（出典必須・ID重複・選択肢数・正解の一意性 等）は `yourwish_kentei` の `question_validator.dart` を参照。
 
-**2026-10-05: `yourwish_kentei`・`app_common_kit`を最新タグに更新**: `pubspec.yaml`の参照タグを`yourwish_kentei`は`v0.2.0`→`v0.10.0`、`app_common_kit`は`v0.2.0`→`v0.8.0`に更新した。これにより、以前の課題（「v0.2.0タグには`--terms`オプションが無い」）は解消し、`--terms`はCIに統合できた。
+**2026-10-05: `yourwish_kentei`・`app_common_kit`を最新タグに更新**: `pubspec.yaml`の参照タグを`yourwish_kentei`は`v0.2.0`→`v0.11.0`、`app_common_kit`は`v0.2.0`→`v0.8.0`に更新した。これにより、以前の課題（「v0.2.0タグには`--terms`オプションが無い」）は解消し、`--terms`・`--ai-news`の両方をCIに統合できた。
 
 既存モデルへの変更は全て加算的（新しいenum値・nullableフィールドの追加のみ）で、既存の`questions.jsonl`・`seisei_ai_passport.json`との後方互換性は保たれると判断した（この環境にはDart/Flutter SDKが無いため実機検証はできていない）。
 
-**タグ付けがコミットに追いついていない問題（2026-10-05、CI失敗から判明）**: `v0.10.0`タグは`yourwish_kentei`の`#13`コミット（`QuestionType.worksheet`追加時点）を指しており、それより後の`main`上のコミット（`#14`〜`#22`: `Term.era`追加・`AiNewsItem`追加・9種類の「型」追加など）にはタグが付いていない。そのため`--ai-news`オプション（`AiNewsItem`検証、`#20`で追加）は`v0.10.0`には含まれておらず、CI workflowに追加したところ`PathNotFoundException`で失敗した（`--ai-news`という文字列がファイルパスとして解釈された）。`.github/workflows/validate_content.yml`からは`--ai-news`を一旦除外し、`--terms`のみ残した。
+**タグ付けがコミットに追いついていなかった問題（2026-10-05、解消済み）**: 当初更新した`v0.10.0`タグは`yourwish_kentei`の`#13`コミット（`QuestionType.worksheet`追加時点）を指しており、`AiNewsItem`追加（`#20`）を含んでいなかったため、CIが`--ai-news`オプションで`PathNotFoundException`失敗した。`yourwish_kentei`側に新タグ発行を依頼し、`#24`（AI倫理ケース追加）までを含む**`v0.11.0`**タグが発行されたことで解消。`yourwish_kentei`側で`v0.10.0..v0.11.0`の差分検証（`dart analyze`0件・既存テスト311件全パス、破壊的変更なし）も実施済み。
 
-→ **`AiNewsItem`検証のCI統合には、`yourwish_kentei`側で`#20`以降を含む新しいタグ（例: v0.11.0）を打つことが前提条件**。これは別リポジトリ側の判断・対応が必要で、本リポジトリの範囲では完結できない。`news.jsonl`自体はデータとして配置済みだが、CI検証は未統合のまま。
-
-**`yourwish_kentei`に実装された新機能・モデル（`v0.10.0`タグより後の`main`のみに存在、タグ更新が前提）**:
-- `AiNewsItem`（画期的な機能⑥「今月のAI動向」）: 当初の提案（`News`、`content/news/README.md`参照）とはフィールド名・型が異なる形で実装された。`news.jsonl`は実装済みスキーマに合わせて書き直し済み
+**`yourwish_kentei`に実装された新機能・モデル（`v0.11.0`に含まれる）**:
+- `AiNewsItem`（画期的な機能⑥「今月のAI動向」）: 当初の提案（`News`、`content/news/README.md`参照）とはフィールド名・型が異なる形で実装された。`news.jsonl`は実装済みスキーマに合わせて書き直し済み。CIに統合済み
 - `Term.era`（用語マップ・AI系譜図向けの時代区分、任意フィールド）: `terms.jsonl`側はまだ未設定（今後の拡充課題）
-- 9種類の学習体験「型」（境界線スライダー・予測→実行・推しの答案を添削・最短ルートプランナー・学習の失敗図鑑・評価指標ラボ・手法の選び方・機械学習ラボ・画像認識の中身を見る・Transformerの注意の可視化）: 大半はG検定・簿記3級など他資格向けで、本リポジトリ固有の画期的な機能①〜④（プロンプト組み立てパズル・これ入力していい？・ハルシネーション見破り・AIの歴史タイムライン）に対応する専用モデルはまだ無い。「Transformerの注意の可視化」「境界線スライダー」は本アプリのシラバス内容と関連しうるため、転用できないか別途検討の余地がある
+- 評価指標ラボ・手法の選び方・機械学習ラボ・画像認識の中身を見る・Transformerの注意の可視化・AI倫理ケース等の学習体験「型」: 大半はG検定・簿記3級など他資格向けで、本リポジトリ固有の画期的な機能①〜④（プロンプト組み立てパズル・これ入力していい？・ハルシネーション見破り・AIの歴史タイムライン）に対応する専用モデルはまだ無い。「Transformerの注意の可視化」「境界線スライダー」「AI倫理ケース」は本アプリのシラバス内容と関連しうるため、転用できないか別途検討の余地がある
 
 **`app_common_kit`への`sparkle`シンボル取り込みについて（訂正）**: 当初「`app_common_kit`にアイコンシンボル`sparkle`が取り込み済み」と記録したが、これは誤り。実際にはこのアプリ側セッションが一時クローンしたローカルリポジトリに、Gitで追跡されない未追跡ファイルとして置いたままのものであり、`app_common_kit`のリモートには一切反映されていない。取り込みは未着手のまま（詳細は`store/icon/README.md`）。
 
