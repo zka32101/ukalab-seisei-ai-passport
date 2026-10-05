@@ -10,6 +10,12 @@
 - `boundary_scenarios.jsonl`: 「境界線スライダー」体験（`yourwish_kentei`の共通基盤機能、`BoundaryScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.11.0の`validateBoundaryScenarios`で検証可能（下記「境界線スライダーの状態」参照）。
 - `attention_viz_scenarios.jsonl`: 「Transformerの注意の可視化」体験（`AttentionVizScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.11.0の`validateAttentionVizScenarios`で検証可能（下記「Transformerの注意の可視化の状態」参照）。
 - `ethics_case_scenarios.jsonl`: 「AI倫理ケース」体験（`EthicsCaseScenario`）向けの初期データ（JSON Lines、1行1ケース）。`yourwish_kentei` v0.11.0の`validateEthicsCaseScenarios`で検証可能（下記「AI倫理ケースの状態」参照）。
+- `ml_lab_datasets.jsonl`: 「機械学習ラボ」体験（`MlLabDataset`）向けの初期データ（JSON Lines、1行1データセット）。`yourwish_kentei` v0.12.0の`validateMlLabDatasets`で検証可能（下記「機械学習ラボの状態」参照）。
+- `nn_builder_datasets.jsonl`: 「ニューラルネット組み立て」体験（`NnBuilderDataset`）向けの初期データ（JSON Lines、1行1データセット）。`yourwish_kentei` v0.12.0の`validateNnBuilderDatasets`で検証可能（下記「ニューラルネット組み立ての状態」参照）。
+- `confusion_matrix_scenarios.jsonl`: 「評価指標ラボ」体験（`ConfusionMatrixScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.12.0の`validateConfusionMatrixScenarios`で検証可能（下記「評価指標ラボの状態」参照）。
+- `conv_lab_images.jsonl`: 「画像認識の中身を見る」体験（`ConvLabImage`）向けの初期データ（JSON Lines、1行1画像）。`yourwish_kentei` v0.12.0の`validateConvLabImages`で検証可能（下記「画像認識の中身を見るの状態」参照）。
+- `method_choice_scenarios.jsonl`: 「手法の選び方」体験（`MethodChoiceScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.12.0の`validateMethodChoiceScenarios`で検証可能（下記「手法の選び方の状態」参照）。
+- `story_scenarios.jsonl`: 「ストーリー型の体験」（複数資格共用の汎用エンジン、`StoryScenario`）向けの初期データ（JSON Lines、1行1シナリオ）。`yourwish_kentei` v0.12.0の`validateStoryScenarios`で検証可能（下記「ストーリー型の体験の状態」参照）。
 
 ## シラバスの版について
 
@@ -117,26 +123,74 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 
 未着手: 全機能分の拡充、運営者確認。
 
+## 機械学習ラボの状態
+
+`ml_lab_datasets.jsonl` は10データセット（すべて1章、スパムメール判定・顧客の購買傾向等）。`yourwish_kentei`の共通基盤機能「機械学習ラボ」（`MlLabDataset`、v0.12.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+各データセットは、2クラス分類（`label` 0/1）の学習データ点（`points`、6点以上・座標0〜10）を持つ構成。点を置いてk近傍法・決定木・線形分類の境界を見る体験に対応し、直線で分離しやすい例を中心に選定した。`yourwish_kentei`の`validateMlLabDatasets`が、点数・両クラスの有無・座標範囲を検証する。
+
+未着手: 全機能分の拡充、運営者確認。
+
+## ニューラルネット組み立ての状態
+
+`nn_builder_datasets.jsonl` は10データセット（すべて1章、XORパターン・渦巻き状データ等）。`yourwish_kentei`の共通基盤機能「ニューラルネット組み立て」（`NnBuilderDataset`、v0.12.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+モデル構造は`MlLabDataset`と同じ（`points`、`label` 0/1）だが、層・ユニット数・活性化関数・学習率を選んで学習曲線の変化を見る体験の趣旨に合わせ、単純な直線では分離できない非線形なパターン（XOR・同心円・渦巻き等）を中心に選定した。
+
+未着手: 全機能分の拡充、運営者確認。
+
+## 評価指標ラボの状態
+
+`confusion_matrix_scenarios.jsonl` は10場面（すべて1章、病気の検査・迷惑メールフィルタ等）。`yourwish_kentei`の共通基盤機能「評価指標ラボ」（`ConfusionMatrixScenario`、v0.12.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+各場面は、初期の混同行列（`initialTp`/`initialFp`/`initialFn`/`initialTn`）と、「偽陽性と偽陰性のどちらを重視すべきか」等を問う選択肢（`options`、ちょうど1つが正解）、解説（`explanation`）を持つ構成。混同行列のセルを動かして正解率・適合率・再現率・F値が連動する様子を見る体験に、評価指標の使い分けを問う場面を組み合わせた。
+
+未着手: 全機能分の拡充、運営者確認。
+
+## 画像認識の中身を見るの状態
+
+`conv_lab_images.jsonl` は10画像（すべて1章、手書き数字0〜3・十字・円・バツ・三角・縦線・横線）。`yourwish_kentei`の共通基盤機能「画像認識の中身を見る」（`ConvLabImage`、v0.12.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+各画像は、手書き風の数字・図形を表すグレースケールの格子（`grid`、7×7・値0.0〜1.0）を持つ構成。畳み込みフィルタ（エッジ検出等）を当てた際の反応がわかりやすいよう、縦線・横線・斜め線・曲線・角を含む形状を選定した。`yourwish_kentei`の`validateConvLabImages`が、格子の長方形性・サイズ（6×6以上）・値の範囲を検証する。
+
+未着手: 全機能分の拡充、運営者確認。
+
+## 手法の選び方の状態
+
+`method_choice_scenarios.jsonl` は10場面（すべて1章、画像分類・時系列予測・次元削減等）。`yourwish_kentei`の共通基盤機能「手法の選び方」（`MethodChoiceScenario`、v0.12.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+各場面は、事例の説明（`caseDescription`）と、手法・モデル・評価指標の選択肢（`options`、ちょうど1つが正解）、解説（`explanation`）を持つ構成（`EthicsCaseScenario`と同じ構造）。CNN・RNN/LSTM・決定木・GAN/VAE・Transformer・PCA・クラスタリング・強化学習・転移学習など、シラバス1章の主要手法を幅広く選定した。
+
+未着手: 全機能分の拡充、運営者確認。
+
+## ストーリー型の体験の状態
+
+`story_scenarios.jsonl` は5シナリオ（各3章、ch3×2・ch4×1・ch5×2）。`yourwish_kentei`の共通基盤機能「ストーリー型の体験」（決定38、簿記3級・乙4・G検定など複数資格で共用する汎用エンジン、`StoryScenario`、v0.12.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+各シナリオは、架空の企業・部門を舞台に、章ごとの状況説明（`situation`）と判断の選択肢（`choices`、ちょうど1つが推奨）・選択後の解説（`feedback`）を持つ構成。社内チャットボット導入・AIエージェントによる業務自動化・生成AI活用・AI倫理ガバナンス体制構築など、複数ステップの判断が必要な場面を選定した。`yourwish_kentei`の`validateStoryScenarios`が、章数・選択肢数・推奨選択肢がちょうど1つであること等を検証する。
+
+未着手: 全機能分の拡充、運営者確認。
+
 ## 検証方法（配信前・CI）
 
 `yourwish_kentei` の検証CLIを使う。
 
 ```bash
-dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl --boundary content/exam/boundary_scenarios.jsonl --attention-viz content/exam/attention_viz_scenarios.jsonl --ethics-case content/exam/ethics_case_scenarios.jsonl content/exam/questions.jsonl
+dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl --boundary content/exam/boundary_scenarios.jsonl --attention-viz content/exam/attention_viz_scenarios.jsonl --ethics-case content/exam/ethics_case_scenarios.jsonl --ml-lab content/exam/ml_lab_datasets.jsonl --nn-builder content/exam/nn_builder_datasets.jsonl --confusion-matrix content/exam/confusion_matrix_scenarios.jsonl --conv-lab content/exam/conv_lab_images.jsonl --method-choice content/exam/method_choice_scenarios.jsonl --story content/exam/story_scenarios.jsonl content/exam/questions.jsonl
 ```
 
 問題が1件でもあれば終了コード1。チェック内容（出典必須・ID重複・選択肢数・正解の一意性 等）は `yourwish_kentei` の `question_validator.dart` を参照。
 
-**2026-10-05: `yourwish_kentei`・`app_common_kit`を最新タグに更新**: `pubspec.yaml`の参照タグを`yourwish_kentei`は`v0.2.0`→`v0.11.0`、`app_common_kit`は`v0.2.0`→`v0.8.0`に更新した。これにより、以前の課題（「v0.2.0タグには`--terms`オプションが無い」）は解消し、`--terms`・`--ai-news`の両方をCIに統合できた。
+**2026-10-05: `yourwish_kentei`・`app_common_kit`を最新タグに更新**: `pubspec.yaml`の参照タグを`yourwish_kentei`は`v0.2.0`→`v0.12.0`、`app_common_kit`は`v0.2.0`→`v0.8.0`に更新した。これにより、以前の課題（「v0.2.0タグには`--terms`オプションが無い」）は解消し、全オプションをCIに統合できた。
 
-既存モデルへの変更は全て加算的（新しいenum値・nullableフィールドの追加のみ）で、既存の`questions.jsonl`・`seisei_ai_passport.json`との後方互換性は保たれると判断した（この環境にはDart/Flutter SDKが無いため実機検証はできていない）。
+既存モデルへの変更は全て加算的（新しいenum値・nullableフィールドの追加のみ、例: `QuestionType`に`ledger`追加）で、既存の`questions.jsonl`・`seisei_ai_passport.json`との後方互換性は保たれると判断した（この環境にはDart/Flutter SDKが無いため実機検証はできていない）。
 
-**タグ付けがコミットに追いついていなかった問題（2026-10-05、解消済み）**: 当初更新した`v0.10.0`タグは`yourwish_kentei`の`#13`コミット（`QuestionType.worksheet`追加時点）を指しており、`AiNewsItem`追加（`#20`）を含んでいなかったため、CIが`--ai-news`オプションで`PathNotFoundException`失敗した。`yourwish_kentei`側に新タグ発行を依頼し、`#24`（AI倫理ケース追加）までを含む**`v0.11.0`**タグが発行されたことで解消。`yourwish_kentei`側で`v0.10.0..v0.11.0`の差分検証（`dart analyze`0件・既存テスト311件全パス、破壊的変更なし）も実施済み。
+**タグ付けがコミットに追いついていなかった問題（2026-10-05、解消済み）**: 当初更新した`v0.10.0`タグは`yourwish_kentei`の`#13`コミット（`QuestionType.worksheet`追加時点）を指しており、`AiNewsItem`追加（`#20`）を含んでいなかったため、CIが`--ai-news`オプションで`PathNotFoundException`失敗した。`yourwish_kentei`側に新タグ発行を依頼し、まず`#24`（AI倫理ケース追加）までを含む`v0.11.0`タグが発行された。その後`#25`（ストーリー型エンジン追加）を含む**`v0.12.0`**タグも確認できたため、`--story`オプションの統合にあわせて再度更新した。`yourwish_kentei`側での差分検証（`dart analyze`0件・既存テスト全パス、破壊的変更なし）も実施済み。
 
-**`yourwish_kentei`に実装された新機能・モデル（`v0.11.0`に含まれる）**:
+**`yourwish_kentei`に実装された新機能・モデル（`v0.12.0`に含まれる）**:
 - `AiNewsItem`（画期的な機能⑥「今月のAI動向」）: 当初の提案（`News`、`content/news/README.md`参照）とはフィールド名・型が異なる形で実装された。`news.jsonl`は実装済みスキーマに合わせて書き直し済み。CIに統合済み
-- `Term.era`（用語マップ・AI系譜図向けの時代区分、任意フィールド）: `terms.jsonl`側はまだ未設定（今後の拡充課題）
-- 評価指標ラボ・手法の選び方・機械学習ラボ・画像認識の中身を見る・Transformerの注意の可視化・AI倫理ケース等の学習体験「型」: 大半はG検定・簿記3級など他資格向けで、本リポジトリ固有の画期的な機能①〜④（プロンプト組み立てパズル・これ入力していい？・ハルシネーション見破り・AIの歴史タイムライン）に対応する専用モデルはまだ無い。「Transformerの注意の可視化」「境界線スライダー」「AI倫理ケース」は本アプリのシラバス内容と関連しうるため、転用できないか別途検討の余地がある
+- `Term.era`（用語マップ・AI系譜図向けの時代区分、任意フィールド）: `terms.jsonl`側に69語分を設定済み
+- 評価指標ラボ・手法の選び方・機械学習ラボ・画像認識の中身を見る・Transformerの注意の可視化・AI倫理ケース・ニューラルネット組み立て・ストーリー型エンジン等の学習体験「型」: うち機械学習ラボ・ニューラルネット組み立て・評価指標ラボ・画像認識の中身を見る・手法の選び方（いずれも1章向け）、境界線スライダー・Transformerの注意の可視化・AI倫理ケース・ストーリー型エンジンは、本リポジトリ向けの初期データを作成済み。本リポジトリ固有の画期的な機能①〜④（プロンプト組み立てパズル・これ入力していい？・ハルシネーション見破り・AIの歴史タイムライン）に対応する専用モデルは依然として無い
 
 **`app_common_kit`への`sparkle`シンボル取り込みについて**: 当初「取り込み済み」という記録が誤りだったことが判明したが（詳細は`store/icon/README.md`）、2026-10-05に`app_common_kit`側に別セッションを作成して取り込みを依頼し、PR #44で実際にマージされたことを確認済み。
 
