@@ -7,6 +7,9 @@
 - `risk_sorting.jsonl`: 「これ入力していい？」機能（画期的な機能②）向けの初期データ（JSON Lines、1行1問）。`yourwish_kentei` にはまだ対応モデルがない（下記「これ入力していい？の状態」参照）。
 - `hallucination_spotting.jsonl`: 「ハルシネーション見破り」機能（画期的な機能③）向けの初期データ（JSON Lines、1行1問）。`yourwish_kentei` にはまだ対応モデルがない（下記「ハルシネーション見破りの状態」参照）。
 - `ai_timeline.jsonl`: 「AIの歴史と最新動向タイムライン」機能（画期的な機能④）向けの初期データ（JSON Lines、1行1件）。`yourwish_kentei` にはまだ対応モデルがない（下記「AIの歴史と最新動向タイムラインの状態」参照）。
+- `rag_pipeline_puzzle.jsonl`: 「RAGパイプライン構築パズル」機能（新規提案、3章向け）の初期データ（JSON Lines、1行1問）。企画段階の新規機能で、`yourwish_kentei` に対応モデルはまだ無い（下記「RAGパイプライン構築パズルの状態」参照）。
+- `agent_delegation.jsonl`: 「エージェントへの権限委任シミュレーター」機能（新規提案、3章向け）の初期データ（JSON Lines、1行1ケース）。企画段階の新規機能で、`yourwish_kentei` に対応モデルはまだ無い（下記「エージェントへの権限委任シミュレーターの状態」参照）。
+- `revision_diff_topics.json`: 「改訂差分ドリル」機能（新規提案、全章向け）の対象トピック一覧。新しいデータファイルではなく、既存`questions.jsonl`の該当`topicId`を集計したメタデータ（下記「改訂差分ドリルの状態」参照）。
 - `boundary_scenarios.jsonl`: 「境界線スライダー」体験（`yourwish_kentei`の共通基盤機能、`BoundaryScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.11.0の`validateBoundaryScenarios`で検証可能（下記「境界線スライダーの状態」参照）。
 - `attention_viz_scenarios.jsonl`: 「Transformerの注意の可視化」体験（`AttentionVizScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.11.0の`validateAttentionVizScenarios`で検証可能（下記「Transformerの注意の可視化の状態」参照）。
 - `ethics_case_scenarios.jsonl`: 「AI倫理ケース」体験（`EthicsCaseScenario`）向けの初期データ（JSON Lines、1行1ケース）。`yourwish_kentei` v0.11.0の`validateEthicsCaseScenarios`で検証可能（下記「AI倫理ケースの状態」参照）。
@@ -110,6 +113,36 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 **2026-10-06 型実装の提案コードを作成**: `yourwish_kentei`に`ai_timeline.jsonl`向けの対応モデルがまだ無いため、`content/news/proposal/`の前例（`News`モデルの提案）に倣い、`proposal/ai_timeline.dart`（`AiTimelineEvent`モデル）・`proposal/ai_timeline_validator.dart`（`validateAiTimelineEvents`等）を作成した。既存の`BoundaryScenario`（`lib/experience/boundary_slider.dart`・`lib/content/boundary_validator.dart`）の実装パターンに合わせたフィールド構成（`eventId`・`examId`・`subjectId`・`topicId`・`year`・`title`・`description`・`category`・`source`・`sourceRef`・`difficulty`・`contentVer`）。あくまで叩き台であり、`yourwish_kentei`側で実際に実装される際はフィールド名・型が変わる可能性がある（`AiNewsItem`の前例を参照）。`yourwish_kentei`側へのIssue起票・実装は本リポジトリのスコープ外のため未着手。
 
 これで画期的な機能①〜④のコンテンツ先行作成が完了（⑤用語マップ・⑥今月のAI動向は既存データあり）。未着手: 全機能分のさらなる拡充、型実装後のデータ構造再検証、`yourwish_kentei`側への型実装提案（Issue起票）。
+
+## 新規提案機能（3章「AIエージェント」向け、2026-10-06企画）
+
+新シラバス（2027年2月適用）で3章「AIエージェント」が完全新設されたのに対し、本リポジトリの画期的な機能①〜⑥・共通基盤の体験型9種類はいずれも1・2・4・5章寄りで、3章専用の体験型が無いというギャップがあった。企画設計書の「画期的アイディア」（元はG検定・GAIP向けに考案されたもの）の中から、3章向けに転用できる案を具体化し、サンプルデータを先行作成した。いずれも企画段階であり、`yourwish_kentei`側に対応モデルは無い。
+
+### RAGパイプライン構築パズルの状態
+
+`rag_pipeline_puzzle.jsonl` は10問。企画設計書「RAGを組み立てる【並べ替え】」（元G検定向け案）を3章向けに具体化。既存の`prompt_puzzle.jsonl`（部品をはめる型）とは異なり、ステップの並べ替え型として設計した。
+
+各問は、場面説明（`scenario`）・シャッフルされたステップ配列（`steps`、`stepId`・`label`・`description`）・正しい順序（`idealOrder`）・順序を間違えた場合の失敗説明（`failureModes`、2件以上）を持つ構成。RAGパイプライン（文書分割・ベクトル化・検索・プロンプト挿入・回答生成）6問、AIエージェントのワークフロー（タスク分解ループ・function calling・エージェントメモリ・MCP）4問。`idealOrder`が`steps`の全`stepId`を重複なく含むことをスクリプトで確認済み。
+
+未着手: `yourwish_kentei`側への型実装提案、全機能分の拡充、運営者確認。
+
+### エージェントへの権限委任シミュレーターの状態
+
+`agent_delegation.jsonl` は10件。企画設計書「任せていい？権限設計」（元GAIP向け案）を3章向けに具体化。既存の`risk_sorting.jsonl`（これ入力していい？）と同じ3値判定（`judgment`: ok/caution/ng）構造を、AIエージェントへの操作委任の文脈に適用した。
+
+各ケースは、業務場面（`scenario`）・エージェントに任せる具体的操作（`action`）・判定（`judgment`）・判定理由（`reason`）・判断の根拠となる原則（`relatedPrinciple`、影響範囲や取り消し可能性等）を持つ構成。情報発信・金銭・データ操作・意思決定・システム操作の5カテゴリから各2件、判定分布はok3／caution3／ng4件。
+
+未着手: `yourwish_kentei`側への型実装提案、全機能分の拡充、運営者確認。
+
+### 改訂差分ドリルの状態
+
+`revision_diff_topics.json` は、新しいコンテンツファイルではなく、既存`questions.jsonl`から「新シラバスで追加・変更された範囲」に該当する`topicId`を集計したメタデータ。企画設計書「改訂差分ドリル【最短ルート】」（旧シラバスで学んだ人向けの特訓）を具体化したもの。
+
+3章「AIエージェント」は新シラバスで完全新設された章のため全90問が対象。4章は、AI新法・AI事業者ガイドライン・EU AI Act関連の12トピックのみが新シラバスでの追加分として対象（情報リテラシー寄りだった旧シラバス4章の残りは対象外）。合計102トピックを`subjectIds`・`additionalTopicIds`として整理した。
+
+**重要な制約**: この機能は新しいデータモデルではなく、既存の問題を`topicId`でフィルタして模擬試験を作る機能が前提。`yourwish_kentei`の`LevelConfig`には科目別の出題数配分（`subjectQuestionCounts`）はあるが、`topicId`単位のフィルタ機能はまだ無いため、型実装提案（`LevelConfig`拡張）はこのデータだけでは完結しない。
+
+未着手: `yourwish_kentei`側への`LevelConfig`拡張提案、運営者確認。
 
 ## 境界線スライダーの状態
 
