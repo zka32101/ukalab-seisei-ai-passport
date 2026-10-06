@@ -19,6 +19,9 @@
 - `conv_lab_images.jsonl`: 「画像認識の中身を見る」体験（`ConvLabImage`）向けの初期データ（JSON Lines、1行1画像）。`yourwish_kentei` v0.12.0の`validateConvLabImages`で検証可能（下記「画像認識の中身を見るの状態」参照）。
 - `method_choice_scenarios.jsonl`: 「手法の選び方」体験（`MethodChoiceScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.12.0の`validateMethodChoiceScenarios`で検証可能（下記「手法の選び方の状態」参照）。
 - `story_scenarios.jsonl`: 「ストーリー型の体験」（複数資格共用の汎用エンジン、`StoryScenario`）向けの初期データ（JSON Lines、1行1シナリオ）。`yourwish_kentei` v0.12.0の`validateStoryScenarios`で検証可能（下記「ストーリー型の体験の状態」参照）。
+- `predict_run_scenarios.jsonl`: 「温度の実験室」体験（`PredictRunScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.12.0の`validatePredictRunScenarios`で検証可能（下記「温度の実験室の状態」参照）。
+- `teach_mascot_scenarios.jsonl`: 「推しの答案を添削」体験（`MisconceptionScenario`）向けの初期データ（JSON Lines、1行1場面）。`yourwish_kentei` v0.12.0の`validateMisconceptionScenarios`で検証可能（下記「推しの答案を添削の状態」参照）。
+- `failure_gallery_cases.jsonl`: 「学習の失敗図鑑」体験（`FailureCase`）向けの初期データ（JSON Lines、1行1症例）。`yourwish_kentei` v0.12.0の`validateFailureCases`で検証可能（下記「学習の失敗図鑑の状態」参照）。
 
 ## シラバスの版について
 
@@ -236,12 +239,36 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 
 未着手: 全機能分の拡充、運営者確認。
 
+## 温度の実験室の状態
+
+`predict_run_scenarios.jsonl` は10場面（bayes4・expectedValue3・normalDistribution3）。`yourwish_kentei`の共通基盤機能「温度の実験室」（型②、決定76、`PredictRunScenario`、v0.12.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+体験は「先に答えを予測→計算結果を表示→ズレを解説」。`bayes`はAI検出ツール・スパムフィルタ・不正検知・採用スクリーニングの判定精度と事前確率のギャップ（精度が高くても母集団の事前確率が低いと的中率は低い）を題材にした。`expectedValue`・`normalDistribution`は生成AIの出力スコアのばらつき等を題材にした。各問のベイズ事後確率・正規分布の区間確率を実際に計算し、`explanation`記載の数値と一致することをスクリプトで確認済み。`yourwish_kentei`の`validatePredictRunScenarios`が、`kind`ごとの必須パラメータ・値域（確率は0〜1等）を検証する。CIにも統合済み（`--predict`オプション）。
+
+未着手: 全機能分の拡充、運営者確認。
+
+## 推しの答案を添削の状態
+
+`teach_mascot_scenarios.jsonl` は10場面（5章から各2件）。`yourwish_kentei`の共通基盤機能「推しの答案を添削」（型③、決定76・77、`MisconceptionScenario`、v0.12.0で実装確認）向けの初期データで、本番配信用の確定版ではない。
+
+体験は「推しが『よくある誤り』を含む答え・説明を出す→誤りをタップして正しい部品に差し替える→推しが理解する」。`statementTemplate`（`{blank}`を1つ含む文）・`options`（2〜4個、ちょうど1つが正解）の構成で、各章の初学者が混同しやすい概念（AIの仕組み・ハルシネーション・エージェントの自律性・著作権リスク・プロンプト設計等）を選定した。`yourwish_kentei`の`validateMisconceptionScenarios`が、`{blank}`の有無・正解がちょうど1つであること等を検証する。CIにも統合済み（`--misconception`オプション）。
+
+未着手: 全機能分の拡充、運営者確認。
+
+## 学習の失敗図鑑の状態
+
+`failure_gallery_cases.jsonl` は10症例（1章向け、過学習4・未学習2・学習率高すぎ2・低すぎ1・理想的1）。`yourwish_kentei`の共通基盤機能「学習の失敗図鑑」（型⑦、決定76、`FailureCase`、v0.12.0で実装確認）向けの初期データで、本番配信用の確定版ではない。既存の機械学習ラボ・ニューラルネット組み立てと同じ1章向け。
+
+体験は「学習曲線（訓練・検証誤差のグラフ）を見て症状を当てる→正解すると処方（対策）を選ぶ→解説を見る」。`curve`（エポック別の訓練・検証誤差）・`symptomOptions`・`treatmentOptions`（各2〜4個、ちょうど1つが正解）の構成。`yourwish_kentei`の`validateFailureCases`が、`curve`の点数・各選択肢の正解がちょうど1つであること等を検証する。CIにも統合済み（`--failure`オプション）。
+
+未着手: 全機能分の拡充、運営者確認。
+
 ## 検証方法（配信前・CI）
 
 `yourwish_kentei` の検証CLIを使う。
 
 ```bash
-dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl --boundary content/exam/boundary_scenarios.jsonl --attention-viz content/exam/attention_viz_scenarios.jsonl --ethics-case content/exam/ethics_case_scenarios.jsonl --ml-lab content/exam/ml_lab_datasets.jsonl --nn-builder content/exam/nn_builder_datasets.jsonl --confusion-matrix content/exam/confusion_matrix_scenarios.jsonl --conv-lab content/exam/conv_lab_images.jsonl --method-choice content/exam/method_choice_scenarios.jsonl --story content/exam/story_scenarios.jsonl content/exam/questions.jsonl
+dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl --boundary content/exam/boundary_scenarios.jsonl --attention-viz content/exam/attention_viz_scenarios.jsonl --ethics-case content/exam/ethics_case_scenarios.jsonl --ml-lab content/exam/ml_lab_datasets.jsonl --nn-builder content/exam/nn_builder_datasets.jsonl --confusion-matrix content/exam/confusion_matrix_scenarios.jsonl --conv-lab content/exam/conv_lab_images.jsonl --method-choice content/exam/method_choice_scenarios.jsonl --story content/exam/story_scenarios.jsonl --predict content/exam/predict_run_scenarios.jsonl --misconception content/exam/teach_mascot_scenarios.jsonl --failure content/exam/failure_gallery_cases.jsonl content/exam/questions.jsonl
 ```
 
 問題が1件でもあれば終了コード1。チェック内容（出典必須・ID重複・選択肢数・正解の一意性 等）は `yourwish_kentei` の `question_validator.dart` を参照。
