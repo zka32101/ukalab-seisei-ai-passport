@@ -107,7 +107,9 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 
 **2026-10-06 10件追加（10→20件）**: 第五世代コンピュータプロジェクト（1982）、バックプロパゲーションの提唱（1986）、第二次AIの冬（1987）、Deep Blueの勝利（1997）、Watsonのクイズ番組勝利（2011）、AlphaGoの勝利（2016）、GPTシリーズの進化（2020）、画像生成AIの普及（2022）、EU AI Actの制定（2024）、AIエージェントの実用化（2025）を追加。既存10件と合わせて20件を時系列に並べた際に矛盾がないことを確認済み。
 
-これで画期的な機能①〜④のコンテンツ先行作成が完了（⑤用語マップ・⑥今月のAI動向は既存データあり）。未着手: 全機能分のさらなる拡充、型実装後のデータ構造再検証。
+**2026-10-06 型実装の提案コードを作成**: `yourwish_kentei`に`ai_timeline.jsonl`向けの対応モデルがまだ無いため、`content/news/proposal/`の前例（`News`モデルの提案）に倣い、`proposal/ai_timeline.dart`（`AiTimelineEvent`モデル）・`proposal/ai_timeline_validator.dart`（`validateAiTimelineEvents`等）を作成した。既存の`BoundaryScenario`（`lib/experience/boundary_slider.dart`・`lib/content/boundary_validator.dart`）の実装パターンに合わせたフィールド構成（`eventId`・`examId`・`subjectId`・`topicId`・`year`・`title`・`description`・`category`・`source`・`sourceRef`・`difficulty`・`contentVer`）。あくまで叩き台であり、`yourwish_kentei`側で実際に実装される際はフィールド名・型が変わる可能性がある（`AiNewsItem`の前例を参照）。`yourwish_kentei`側へのIssue起票・実装は本リポジトリのスコープ外のため未着手。
+
+これで画期的な機能①〜④のコンテンツ先行作成が完了（⑤用語マップ・⑥今月のAI動向は既存データあり）。未着手: 全機能分のさらなる拡充、型実装後のデータ構造再検証、`yourwish_kentei`側への型実装提案（Issue起票）。
 
 ## 境界線スライダーの状態
 
