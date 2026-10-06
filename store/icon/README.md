@@ -39,6 +39,7 @@
 - 検討の過程: 当初Canva（MCPツール経由）で画像生成を試みたが、`generate-image`が生成する高解像度画像（1264×1264相当）をMCP経由で取得する手段がなく、取得できたのは200×200のJPEGサムネイルのみだった。アイコンサイズに拡大するとノイズ・ギザギザが目立ち実用に耐えなかったため、同じ構図を手作業の高解像度SVGとして自作する方針に切り替えた。
 - 提案先: `app_common_kit/tools/icon_gen/symbols/passport_ai.svg`（本リポジトリでは `proposal/passport_ai.svg` に配置）。既存シンボルと同じ規約（viewBox `-50 -50 100 100`、白塗り `fill="#fff"`、背景色で中抜きする部分は `__BG__`）で作成。
 - 旧シンボル`sparkle`（`app_common_kit`のPR #44でマージ済み）は、本資格での使用を終了。`app_common_kit`側のファイル自体は残置（他資格が将来使う可能性を妨げないため、削除は依頼しない）。
+- **2026-10-05 取り込み完了**: `app_common_kit`側に別セッションを作成して取り込みを依頼し、PR #50（`app_common_kit`、マージコミット`9b34ba3`）で`tools/icon_gen/symbols/passport_ai.svg`・`tools/icon_gen/specs/sample.json`（`gen_ai_passport`のシンボルを`passport_ai`に更新）の両方がマージされたことを確認。本リポジトリの提案（`proposal/passport_ai.svg`）と内容が完全一致。
 
 ## 「うかラボ」ロゴへの桜マーク追加（2026-10-05、テンプレート更新に追従）
 
