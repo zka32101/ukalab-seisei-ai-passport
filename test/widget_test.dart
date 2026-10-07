@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:ukalab_seisei_ai_passport/main.dart';
@@ -19,20 +19,21 @@ Future<void> _waitUntilFound(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
-  testWidgets('ホームから演習開始までの最短経路が動く', (WidgetTester tester) async {
-    await tester.pumpWidget(const UkalabSeiseiAiPassportApp());
+  testWidgets('ホーム表示から学ぶタブで演習が始まる', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const ProviderScope(child: UkalabSeiseiAiPassportApp()),
+    );
     await tester.pump();
 
-    final startButton = find.widgetWithText(FilledButton, '演習を始める（10問）');
-    await _waitUntilFound(tester, startButton);
+    final homeTitle = find.textContaining('収録問題数');
+    await _waitUntilFound(tester, homeTitle);
 
     expect(find.textContaining('生成AIパスポート'), findsWidgets);
-    expect(find.textContaining('問題データ'), findsOneWidget);
-    expect(startButton, findsOneWidget);
+    expect(homeTitle, findsOneWidget);
 
-    await tester.tap(startButton);
+    await tester.tap(find.text('学ぶ'));
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 400)); // ページ遷移アニメーション
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.textContaining('第1問'), findsOneWidget);
   });
