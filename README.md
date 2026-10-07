@@ -10,7 +10,7 @@
 本リポジトリ（薄いアプリ） → yourwish_kentei（試験エンジン） → app_common_kit（共通部品）
 ```
 
-本リポジトリが持つのは ExamConfig（試験定義）・問題データ・テーマ・ストア設定のみ。共通の仕組みは `yourwish_kentei` / `app_common_kit` に実装されており、タグ固定（`ref: vX.Y.Z`）で参照する。
+本リポジトリが持つのは ExamConfig（試験定義）・問題データ・テーマ・ストア設定・アプリ本体のUI実装（`lib/`）のみ。共通の仕組みは `yourwish_kentei` / `app_common_kit` に実装されており、タグ固定（`ref: vX.Y.Z`）で参照する。
 
 - [`zka32101/yourwish_kentei`](https://github.com/zka32101/yourwish_kentei)（現在 `v0.12.0`）
 - [`zka32101/app_common_kit`](https://github.com/zka32101/app_common_kit)（現在 `v0.8.0`）
@@ -25,6 +25,7 @@
 - アプリアイコンはシンボル`passport_ai`・短縮表記「AIパス」で最終案を確定（`store/icon/README.md`）。`app_common_kit`への取り込みも完了済み
 - 新シラバスで新設された3章「AIエージェント」向けに、既存の画期的な機能・体験型では未対応だったギャップを埋める新規機能案（RAGパイプライン構築パズル・エージェントへの権限委任シミュレーター・改訂差分ドリル）を企画し、サンプルデータを先行作成済み（`content/exam/`配下、詳細は`content/exam/README.md`）。いずれも企画段階で、`yourwish_kentei`側への型実装提案は未着手
 - 企画設計書の「画期的アイディア」5案（温度の実験室・RAGを組み立てる・著作権の分かれ道・任せていい？権限設計・改訂差分ドリル）は、既存の境界線スライダー（`boundary_scenarios.jsonl`に「著作権の分かれ道」シナリオを追加）も含め全て対応完了
+- アプリ本体のUI実装に着手（`flutter create`で骨格を作成、`lib/main.dart`にホーム→演習10問→結果の最短経路のみ実装）。`app_common_kit`のテーマ・UI部品（`UkalabTheme`・`QuestionCard`・`ChoiceTile`・`ExplanationPanel`・`ResultSummary`）と`yourwish_kentei`の演習ロジック（`PracticeSession`）を使用。`flutter build web`でのビルドとブラウザでの表示・操作を確認済み。推し・コイン・衣装・権利管理・広告ゲート等の機能は未実装
 
 ## ドキュメント
 
