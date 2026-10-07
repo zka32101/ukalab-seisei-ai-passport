@@ -46,7 +46,9 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 
 **2026-10-07 `syllabusVersion`フィールドを追加**: GUGA公式サイトで2027年試験向けシラバスの「大幅改訂」が告知された（2026-10-01〜02付、公式テキストの発行元もGUGAから翔泳社に変更）。出題範囲の詳細はまだ確認できておらず問題データの作り直しは時期尚早だが、改訂内容が確定した際に新旧の問題を区別できるよう、`questions.jsonl`全400問・`seisei_ai_passport.json`に`syllabusVersion: "2027-02"`（現在確認できているGUGA公式シラバス「2027年2月試験より適用」版を示す識別子）を追加した。`yourwish_kentei`の`Question`・`ExamConfig`にはまだ対応フィールドが無いため、型実装の叩き台を`proposal/question_syllabus_version.md`に作成した（新しいnullableフィールドの追加のみで、既存の`fromJson`/`toJson`への影響はない）。実際にこの環境にFlutter SDKを導入し、`dart run yourwish_kentei:validate_content`を実行して、未知のフィールドが追加されても既存のCI検証（全21ファイル）が「問題0件」で通ることを確認済み。
 
-未着手（いずれも運営者の判断が必要）: 出題範囲の詳細確認（GUGA公式シラバスPDF本文の照合）、問題データの作り直し、教材方針（公式テキストの出版元変更への対応）、`yourwish_kentei`側への型実装提案（Issue起票）。
+**2026-10-07 `yourwish_kentei`側にIssue起票**: [Issue #28](https://github.com/zka32101/yourwish_kentei/issues/28)として`Question`・`ExamConfig`への`syllabusVersion`追加を提案済み。
+
+未着手（いずれも運営者の判断が必要）: 出題範囲の詳細確認（GUGA公式シラバスPDF本文の照合）、問題データの作り直し、教材方針（公式テキストの出版元変更への対応）。
 
 ## 用語データの状態
 
@@ -119,7 +121,11 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 
 **2026-10-06 型実装の提案コードを作成**: `yourwish_kentei`に`ai_timeline.jsonl`向けの対応モデルがまだ無いため、`content/news/proposal/`の前例（`News`モデルの提案）に倣い、`proposal/ai_timeline.dart`（`AiTimelineEvent`モデル）・`proposal/ai_timeline_validator.dart`（`validateAiTimelineEvents`等）を作成した。既存の`BoundaryScenario`（`lib/experience/boundary_slider.dart`・`lib/content/boundary_validator.dart`）の実装パターンに合わせたフィールド構成（`eventId`・`examId`・`subjectId`・`topicId`・`year`・`title`・`description`・`category`・`source`・`sourceRef`・`difficulty`・`contentVer`）。あくまで叩き台であり、`yourwish_kentei`側で実際に実装される際はフィールド名・型が変わる可能性がある（`AiNewsItem`の前例を参照）。`yourwish_kentei`側へのIssue起票・実装は本リポジトリのスコープ外のため未着手。
 
-これで画期的な機能①〜④のコンテンツ先行作成が完了（⑤用語マップ・⑥今月のAI動向は既存データあり）。未着手: 全機能分のさらなる拡充、型実装後のデータ構造再検証、`yourwish_kentei`側への型実装提案（Issue起票）。
+これで画期的な機能①〜④のコンテンツ先行作成が完了（⑤用語マップ・⑥今月のAI動向は既存データあり）。
+
+**2026-10-07 `yourwish_kentei`側にIssue起票**: [Issue #27](https://github.com/zka32101/yourwish_kentei/issues/27)として`AiTimelineEvent`型の追加を提案済み（プロンプト組み立てパズル・これ入力していい？・ハルシネーション見破りの3つは、前回の調査通り本アプリ固有のままが妥当と判断し、今回は見送った）。
+
+未着手: 全機能分のさらなる拡充、型実装後のデータ構造再検証。
 
 ## 新規提案機能（3章「AIエージェント」向け、2026-10-06企画）
 
