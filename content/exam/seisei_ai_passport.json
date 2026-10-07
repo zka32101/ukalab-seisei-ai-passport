@@ -18,5 +18,6 @@
       "passRule": { "totalPct": 70 }
     }
   ],
-  "examDates": []
+  "examDates": [],
+  "syllabusVersion": "2027-02"
 }
