@@ -15,7 +15,7 @@
 - [`zka32101/yourwish_kentei`](https://github.com/zka32101/yourwish_kentei)（現在 `v0.12.0`）
 - [`zka32101/app_common_kit`](https://github.com/zka32101/app_common_kit)（現在 `v0.8.0`）
 
-## 現在の状態（2026-10-06 時点）
+## 現在の状態（2026-10-07 時点）
 
 - リリース順（決定66）: 第1陣は G検定 → データマネジメント試験 → **本アプリ** → 危険物乙4 → 簿記3級
 - 学習体験の「型」は `yourwish_kentei` 側に実装され続けている（v0.12.0時点でデータを要する型が12種類。他に正答率などの既存データだけで動くロジック専用の型が2種類）。機械学習ラボ・ニューラルネット組み立て・評価指標ラボ・画像認識の中身を見る・手法の選び方（1章向け）、境界線スライダー・Transformerの注意の可視化・AI倫理ケース・ストーリー型エンジン・温度の実験室・推しの答案を添削・学習の失敗図鑑の12種類全てで、本リポジトリ向けの初期データを作成済み（CIにも統合済み）。本アプリ独自の体験型機能（プロンプト組み立てパズル・これ入力していい？・ハルシネーション見破り・AIの歴史タイムライン）に対応する専用モデルはまだ無い（詳細は`content/exam/README.md`）
@@ -26,6 +26,7 @@
 - 新シラバスで新設された3章「AIエージェント」向けに、既存の画期的な機能・体験型では未対応だったギャップを埋める新規機能案（RAGパイプライン構築パズル・エージェントへの権限委任シミュレーター・改訂差分ドリル）を企画し、サンプルデータを先行作成済み（`content/exam/`配下、詳細は`content/exam/README.md`）。いずれも企画段階で、`yourwish_kentei`側への型実装提案は未着手
 - 企画設計書の「画期的アイディア」5案（温度の実験室・RAGを組み立てる・著作権の分かれ道・任せていい？権限設計・改訂差分ドリル）は、既存の境界線スライダー（`boundary_scenarios.jsonl`に「著作権の分かれ道」シナリオを追加）も含め全て対応完了
 - アプリ本体のUI実装に着手（`flutter create`で骨格を作成、`lib/main.dart`にホーム→演習10問→結果の最短経路のみ実装）。`app_common_kit`のテーマ・UI部品（`UkalabTheme`・`QuestionCard`・`ChoiceTile`・`ExplanationPanel`・`ResultSummary`）と`yourwish_kentei`の演習ロジック（`PracticeSession`）を使用。`flutter build web`でのビルドとブラウザでの表示・操作を確認済み。推し・コイン・衣装・権利管理・広告ゲート等の機能は未実装
+- GUGA公式サイトで2027年試験向けシラバスの「大幅改訂」が告知された（公式テキストの発行元もGUGAから翔泳社に変更）。出題範囲の詳細が未確認のため問題データの作り直しは時期尚早だが、新旧の問題を区別できるよう`questions.jsonl`・`seisei_ai_passport.json`に`syllabusVersion`フィールドを追加済み。`yourwish_kentei`側の型実装提案は`content/exam/proposal/`に作成済み（詳細は`content/exam/README.md`）
 
 ## ドキュメント
 
