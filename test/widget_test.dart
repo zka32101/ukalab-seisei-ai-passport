@@ -93,6 +93,19 @@ void main() {
 
       expect(find.text('推しの答案を添削'), findsWidgets);
       expect(find.textContaining('1 / '), findsOneWidget);
+
+      // ホームタブから「学習の失敗図鑑」にも遷移できる。
+      await tester.pageBack();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await _waitUntilFound(tester, find.text('学習の失敗図鑑'));
+
+      await tester.tap(find.text('学習の失敗図鑑'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('学習の失敗図鑑'), findsWidgets);
+      expect(find.textContaining('1 / '), findsOneWidget);
     },
   );
 }
