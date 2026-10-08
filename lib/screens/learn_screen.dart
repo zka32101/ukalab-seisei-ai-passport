@@ -27,6 +27,9 @@ class LearnScreen extends ConsumerStatefulWidget {
 
 class _LearnScreenState extends ConsumerState<LearnScreen> {
   late PracticeSession _session = _newSession();
+  // 表示中の問題。session.answer() は解答と同時に session.current を次の問題へ
+  // 進めるため、解説・正誤表示には別途この値を使う（「次へ」が押されるまで保持）。
+  late Question? _displayQuestion = _session.current;
   int? _selected;
   bool _answered = false;
 
@@ -46,6 +49,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   void _restart() {
     setState(() {
       _session = _newSession();
+      _displayQuestion = _session.current;
       _selected = null;
       _answered = false;
     });
@@ -53,7 +57,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
 
   void _select(int i) {
     if (_answered) return;
-    final q = _session.current!;
+    final q = _displayQuestion!;
     setState(() {
       _selected = i;
       _answered = true;
@@ -66,6 +70,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
 
   void _next() {
     setState(() {
+      _displayQuestion = _session.current;
       _selected = null;
       _answered = false;
     });
@@ -76,7 +81,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     if (widget.questions.isEmpty) {
       return const EmptyState(message: '問題データがまだありません。');
     }
-    final q = _session.current;
+    final q = _displayQuestion;
     if (q == null) {
       return Center(
         child: SingleChildScrollView(
@@ -97,7 +102,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
         children: [
           QuestionCard(
             text: q.prompt,
-            index: _session.index + 1,
+            index: _session.questions.indexOf(q) + 1,
             total: _session.questions.length,
             child: Column(
               children: [
