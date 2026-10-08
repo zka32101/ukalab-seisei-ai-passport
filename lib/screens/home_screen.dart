@@ -1,9 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import 'boundary_screen.dart';
+import 'confusion_matrix_screen.dart';
 import 'failure_gallery_screen.dart';
+import 'predict_run_screen.dart';
+import 'route_planner_screen.dart';
 import 'teach_mascot_screen.dart';
 import 'term_map_screen.dart';
+
+class _ExperienceEntry {
+  const _ExperienceEntry({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.builder,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final WidgetBuilder builder;
+}
+
+final _experienceEntries = [
+  _ExperienceEntry(
+    icon: Icons.auto_awesome,
+    title: '推しの答案を添削',
+    subtitle: 'よくある誤解を見つけて、正しい答えに差し替えよう',
+    builder: (_) => const TeachMascotScreen(),
+  ),
+  _ExperienceEntry(
+    icon: Icons.show_chart,
+    title: '学習の失敗図鑑',
+    subtitle: '学習曲線から症状を見抜き、正しい対策を選ぼう',
+    builder: (_) => const FailureGalleryScreen(),
+  ),
+  _ExperienceEntry(
+    icon: Icons.hub_outlined,
+    title: '用語マップ',
+    subtitle: 'AIの歴史の系譜や、用語どうしのつながりを見る',
+    builder: (_) => const TermMapScreen(),
+  ),
+  _ExperienceEntry(
+    icon: Icons.tune,
+    title: '境界線スライダー',
+    subtitle: '条件を切り替えて、判定が変わる境目を体験しよう',
+    builder: (_) => const BoundaryScreen(),
+  ),
+  _ExperienceEntry(
+    icon: Icons.grid_on,
+    title: '評価指標ラボ',
+    subtitle: '混同行列を動かして、正解率・適合率・再現率を見てみよう',
+    builder: (_) => const ConfusionMatrixScreen(),
+  ),
+  _ExperienceEntry(
+    icon: Icons.science_outlined,
+    title: '温度の実験室',
+    subtitle: '先に答えを予測してから、計算結果とのズレを確かめよう',
+    builder: (_) => const PredictRunScreen(),
+  ),
+  _ExperienceEntry(
+    icon: Icons.checklist,
+    title: '今日やる3つ',
+    subtitle: '弱点と配点から、今日取り組むべき科目を3つ提案',
+    builder: (_) => const RoutePlannerScreen(),
+  ),
+];
 
 /// 「ホーム」タブ。推し・コインは後続で追加。
 class HomeScreen extends StatelessWidget {
@@ -45,42 +108,20 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.auto_awesome),
-              title: const Text('推しの答案を添削'),
-              subtitle: const Text('よくある誤解を見つけて、正しい答えに差し替えよう'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const TeachMascotScreen()),
+          for (final entry in _experienceEntries) ...[
+            const SizedBox(height: 8),
+            Card(
+              child: ListTile(
+                leading: Icon(entry.icon),
+                title: Text(entry.title),
+                subtitle: Text(entry.subtitle),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: entry.builder),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.show_chart),
-              title: const Text('学習の失敗図鑑'),
-              subtitle: const Text('学習曲線から症状を見抜き、正しい対策を選ぼう'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const FailureGalleryScreen()),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.hub_outlined),
-              title: const Text('用語マップ'),
-              subtitle: const Text('AIの歴史の系譜や、用語どうしのつながりを見る'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const TermMapScreen()),
-              ),
-            ),
-          ),
+          ],
         ],
       ),
     );
