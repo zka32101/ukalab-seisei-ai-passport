@@ -31,6 +31,7 @@
 - 模擬試験の出題にも苦手科目優先を反映。`SrsStore.statsBySubject`（記録タブと共用）から科目別正答率を算出し、正答率が低い科目ほど出題されやすくなるよう重み付け抽選（`_pickWeighted`）で60問を選ぶ。解答実績が無い科目・解答実績自体が無い場合は従来どおり一様ランダムと同じ
 - ホームタブに「推しの答案を添削」（画期的な機能・共通基盤の型③、`yourwish_kentei`の`MisconceptionScenario`、`app_common_kit`の`TeachMascotWidget`）を実装。`lib/data/misconception_repository.dart`で`teach_mascot_scenarios.jsonl`（10場面）を読み込み、`lib/screens/teach_mascot_screen.dart`で1場面ずつ表示する
 - ホームタブに「学習の失敗図鑑」（共通基盤の型⑦、`yourwish_kentei`の`FailureCase`、`app_common_kit`の`FailureGalleryWidget`）を実装。`lib/data/failure_gallery_repository.dart`で`failure_gallery_cases.jsonl`（10症例）を読み込み、`lib/screens/failure_gallery_screen.dart`で学習曲線から症状→処方の2段階選択→解説を1症例ずつ表示する
+- ホームタブに「用語マップ」（画期的な機能⑤、`yourwish_kentei`の`Term`、`app_common_kit`の`TermMapWidget`/`TermCard`）を実装。`lib/data/term_repository.dart`で`terms.jsonl`（133語）を読み込み、`lib/screens/term_map_screen.dart`でAIの歴史（`era`付き69語）を時代区分のタイムライン、それ以外を関連でつながる地図で表示。タップで用語カード（ボトムシート）を開き、関連用語はカードを開き直し・関連問題は`priorityQids`で学ぶタブ相当の画面に遷移する
 - GUGA公式サイトで2027年試験向けシラバスの「大幅改訂」が告知された（公式テキストの発行元もGUGAから翔泳社に変更）。出題範囲の詳細が未確認のため問題データの作り直しは時期尚早だが、新旧の問題を区別できるよう`questions.jsonl`・`seisei_ai_passport.json`に`syllabusVersion`フィールドを追加済み。`yourwish_kentei`側の型実装提案は`content/exam/proposal/`に作成済み（詳細は`content/exam/README.md`）
 - `yourwish_kentei`側への型実装提案2件をIssue起票済み: [Issue #27](https://github.com/zka32101/yourwish_kentei/issues/27)（`AiTimelineEvent`型）・[Issue #28](https://github.com/zka32101/yourwish_kentei/issues/28)（`Question`/`ExamConfig`への`syllabusVersion`追加）。RAGパイプライン構築パズル等3章向け新規提案3件はまだ未起票
 

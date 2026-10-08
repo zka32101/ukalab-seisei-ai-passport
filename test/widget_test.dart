@@ -106,6 +106,18 @@ void main() {
 
       expect(find.text('学習の失敗図鑑'), findsWidgets);
       expect(find.textContaining('1 / '), findsOneWidget);
+
+      // ホームタブから「用語マップ」にも遷移できる。
+      await tester.pageBack();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await _waitUntilFound(tester, find.text('用語マップ'));
+
+      await tester.tap(find.text('用語マップ'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('用語マップ'), findsWidgets);
     },
   );
 }

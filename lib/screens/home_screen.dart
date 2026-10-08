@@ -3,6 +3,7 @@ import 'package:yourwish_kentei/yourwish_kentei.dart';
 
 import 'failure_gallery_screen.dart';
 import 'teach_mascot_screen.dart';
+import 'term_map_screen.dart';
 
 /// 「ホーム」タブ。推し・コインは後続で追加。
 class HomeScreen extends StatelessWidget {
@@ -65,6 +66,18 @@ class HomeScreen extends StatelessWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const FailureGalleryScreen()),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.hub_outlined),
+              title: const Text('用語マップ'),
+              subtitle: const Text('AIの歴史の系譜や、用語どうしのつながりを見る'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const TermMapScreen()),
               ),
             ),
           ),
