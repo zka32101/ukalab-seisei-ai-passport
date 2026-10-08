@@ -65,6 +65,22 @@ void main() {
 
       expect(find.textContaining('復習:'), findsOneWidget);
       expect(find.textContaining('第1問'), findsOneWidget);
+
+      // 解答実績がある状態でも模擬試験が正常に開始できる（苦手科目優先の重み付け）。
+      await tester.pageBack();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await _waitUntilFound(tester, find.text('模擬'));
+
+      await tester.tap(find.text('模擬'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      await tester.tap(find.text('模擬試験を始める'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.textContaining('第1問'), findsOneWidget);
     },
   );
 }

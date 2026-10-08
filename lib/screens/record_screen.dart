@@ -148,22 +148,14 @@ List<_SubjectAccuracy> _weakSubjects(
   SrsStore store,
   Map<String, String> subjectNames,
 ) {
-  final correctBySubject = <String, int>{};
-  final totalBySubject = <String, int>{};
-  for (final q in questions) {
-    final stat = store.stats[q.qid];
-    if (stat == null) continue;
-    correctBySubject[q.subjectId] = (correctBySubject[q.subjectId] ?? 0) + stat.correct;
-    totalBySubject[q.subjectId] = (totalBySubject[q.subjectId] ?? 0) + stat.attempts;
-  }
-
+  final statsBySubject = store.statsBySubject(questions);
   final subjects = [
-    for (final subjectId in totalBySubject.keys)
+    for (final entry in statsBySubject.entries)
       _SubjectAccuracy(
-        subjectId: subjectId,
-        name: subjectNames[subjectId] ?? subjectId,
-        correct: correctBySubject[subjectId] ?? 0,
-        total: totalBySubject[subjectId]!,
+        subjectId: entry.key,
+        name: subjectNames[entry.key] ?? entry.key,
+        correct: entry.value.$1,
+        total: entry.value.$2,
       ),
   ]..sort((a, b) => a.accuracy.compareTo(b.accuracy));
 
