@@ -55,6 +55,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 400));
 
       expect(find.textContaining('記録している問題: 1問'), findsOneWidget);
+      expect(find.text('苦手分野'), findsOneWidget);
     },
   );
 }
