@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import 'failure_gallery_screen.dart';
 import 'teach_mascot_screen.dart';
 
 /// 「ホーム」タブ。推し・コインは後続で追加。
@@ -52,6 +53,18 @@ class HomeScreen extends StatelessWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const TeachMascotScreen()),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.show_chart),
+              title: const Text('学習の失敗図鑑'),
+              subtitle: const Text('学習曲線から症状を見抜き、正しい対策を選ぼう'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const FailureGalleryScreen()),
               ),
             ),
           ),
