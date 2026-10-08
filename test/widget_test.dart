@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,6 +57,14 @@ void main() {
 
       expect(find.textContaining('記録している問題: 1問'), findsOneWidget);
       expect(find.text('苦手分野'), findsOneWidget);
+
+      // 苦手分野の行をタップすると、その科目の復習セッションに遷移する。
+      await tester.tap(find.byIcon(Icons.chevron_right).first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.textContaining('復習:'), findsOneWidget);
+      expect(find.textContaining('第1問'), findsOneWidget);
     },
   );
 }

@@ -27,7 +27,7 @@
 - 企画設計書の「画期的アイディア」5案（温度の実験室・RAGを組み立てる・著作権の分かれ道・任せていい？権限設計・改訂差分ドリル）は、既存の境界線スライダー（`boundary_scenarios.jsonl`に「著作権の分かれ道」シナリオを追加）も含め全て対応完了
 - アプリ本体のUI実装を、G検定アプリ（`ukalab-g-kentei`）のパターンに合わせて拡張（`flutter_riverpod`導入、`UkalabShell`による5タブ構成「ホーム/学ぶ/模擬/記録/設定」）。`lib/data/exam_repository.dart`（`FutureProvider`での試験データ読み込み）・`lib/screens/`（各タブ）に分割。学ぶタブは演習10問（`PracticeSession`）、模擬タブは本試験形式の採点（`scoreMockExam`、合格ラインは非公開のため70%を目安表示）。`flutter build web --no-web-resources-cdn`でのビルドとPlaywright(Chromium)での全タブの表示・操作を確認済み。推し・コイン・衣装・権利管理・広告ゲート等の機能は未実装
 - 記録タブに間隔反復（Leitner方式、`yourwish_kentei`の`Srs`/`SrsItem`）を実装。学ぶタブで解答するたびに`lib/data/srs_repository.dart`（`AsyncNotifier`＋`shared_preferences`で端末内保存）に記録し、記録タブでは復習時期が来た問題数・定着済み問題数を表示。「復習を始める」から`PracticeSession`の`priorityQids`（復習対象を先頭固定）・`mode: weak`で学ぶタブ相当の画面に遷移する
-- 記録タブに苦手分析を追加。解答のたびに問題ID単位の解答回数・正解数（`AnswerStat`）も`srs_repository.dart`に記録し、`Question.subjectId`（章）ごとに集計。正答率が低い章を最大3件表示する
+- 記録タブに苦手分析を追加。解答のたびに問題ID単位の解答回数・正解数（`AnswerStat`）も`srs_repository.dart`に記録し、`Question.subjectId`（章）ごとに集計。正答率が低い章を最大3件表示し、各行をタップするとその章の復習（不正解だった問題を優先、全問正解なら解答済み全問）に直接遷移する
 - GUGA公式サイトで2027年試験向けシラバスの「大幅改訂」が告知された（公式テキストの発行元もGUGAから翔泳社に変更）。出題範囲の詳細が未確認のため問題データの作り直しは時期尚早だが、新旧の問題を区別できるよう`questions.jsonl`・`seisei_ai_passport.json`に`syllabusVersion`フィールドを追加済み。`yourwish_kentei`側の型実装提案は`content/exam/proposal/`に作成済み（詳細は`content/exam/README.md`）
 - `yourwish_kentei`側への型実装提案2件をIssue起票済み: [Issue #27](https://github.com/zka32101/yourwish_kentei/issues/27)（`AiTimelineEvent`型）・[Issue #28](https://github.com/zka32101/yourwish_kentei/issues/28)（`Question`/`ExamConfig`への`syllabusVersion`追加）。RAGパイプライン構築パズル等3章向け新規提案3件はまだ未起票
 
