@@ -89,18 +89,34 @@ class RecordScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             for (final s in weakSubjects)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(s.name, style: Theme.of(context).textTheme.bodyMedium),
+              InkWell(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => Scaffold(
+                      appBar: AppBar(title: Text('復習: ${s.name}')),
+                      body: LearnScreen(
+                        questions: questions,
+                        priorityQids: _subjectReviewQids(questions, store, s.subjectId),
+                        mode: PracticeMode.weak,
+                      ),
                     ),
-                    Text(
-                      '${(s.accuracy * 100).round()}%（${s.correct}/${s.total}問）',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(s.name, style: Theme.of(context).textTheme.bodyMedium),
+                      ),
+                      Text(
+                        '${(s.accuracy * 100).round()}%（${s.correct}/${s.total}問）',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.chevron_right, size: 20),
+                    ],
+                  ),
                 ),
               ),
           ],
@@ -112,11 +128,13 @@ class RecordScreen extends ConsumerWidget {
 
 class _SubjectAccuracy {
   const _SubjectAccuracy({
+    required this.subjectId,
     required this.name,
     required this.correct,
     required this.total,
   });
 
+  final String subjectId;
   final String name;
   final int correct;
   final int total;
@@ -142,6 +160,7 @@ List<_SubjectAccuracy> _weakSubjects(
   final subjects = [
     for (final subjectId in totalBySubject.keys)
       _SubjectAccuracy(
+        subjectId: subjectId,
         name: subjectNames[subjectId] ?? subjectId,
         correct: correctBySubject[subjectId] ?? 0,
         total: totalBySubject[subjectId]!,
@@ -149,4 +168,22 @@ List<_SubjectAccuracy> _weakSubjects(
   ]..sort((a, b) => a.accuracy.compareTo(b.accuracy));
 
   return subjects.take(3).toList();
+}
+
+/// ある科目で復習対象にする問題IDを返す。解答済みのうち不正解だったものを優先し、
+/// 全問正解の科目では解答済み全問を対象にする。
+List<String> _subjectReviewQids(
+  List<Question> questions,
+  SrsStore store,
+  String subjectId,
+) {
+  final answeredQids = [
+    for (final q in questions)
+      if (q.subjectId == subjectId && store.stats.containsKey(q.qid)) q.qid,
+  ];
+  final incorrectQids = [
+    for (final qid in answeredQids)
+      if (store.stats[qid]!.correct < store.stats[qid]!.attempts) qid,
+  ];
+  return incorrectQids.isNotEmpty ? incorrectQids : answeredQids;
 }
