@@ -118,6 +118,65 @@ void main() {
       await tester.pump(const Duration(milliseconds: 400));
 
       expect(find.text('用語マップ'), findsWidgets);
+
+      // ホームタブから「境界線スライダー」にも遷移できる。
+      await tester.pageBack();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await _waitUntilFound(tester, find.text('境界線スライダー'));
+      await tester.ensureVisible(find.text('境界線スライダー'));
+      await tester.pump();
+
+      await tester.tap(find.text('境界線スライダー'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('境界線スライダー'), findsWidgets);
+      expect(find.textContaining('1 / '), findsOneWidget);
+
+      // ホームタブから「評価指標ラボ」にも遷移できる。
+      await tester.pageBack();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await _waitUntilFound(tester, find.text('評価指標ラボ'));
+      await tester.ensureVisible(find.text('評価指標ラボ'));
+      await tester.pump();
+
+      await tester.tap(find.text('評価指標ラボ'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('評価指標ラボ'), findsWidgets);
+      expect(find.textContaining('1 / '), findsOneWidget);
+
+      // ホームタブから「温度の実験室」にも遷移できる。
+      await tester.pageBack();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await _waitUntilFound(tester, find.text('温度の実験室'));
+      await tester.ensureVisible(find.text('温度の実験室'));
+      await tester.pump();
+
+      await tester.tap(find.text('温度の実験室'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('温度の実験室'), findsWidgets);
+      expect(find.textContaining('1 / '), findsOneWidget);
+
+      // ホームタブから「今日やる3つ」にも遷移できる。
+      await tester.pageBack();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await _waitUntilFound(tester, find.text('今日やる3つ'));
+      await tester.ensureVisible(find.text('今日やる3つ'));
+      await tester.pump();
+
+      await tester.tap(find.text('今日やる3つ'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('今日やる3つ'), findsWidgets);
     },
   );
 }
