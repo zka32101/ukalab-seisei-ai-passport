@@ -1,19 +1,25 @@
+import 'dart:math';
+
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import '../data/srs_repository.dart';
+
 /// 「模擬」タブ: 本試験相当の採点（合格ラインの目安は非公開のため70%を目安と明記）。
-class MockExamScreen extends StatefulWidget {
+/// 出題は、記録タブの解答実績から苦手な科目（正答率が低い科目）を優先的に多く含める。
+class MockExamScreen extends ConsumerStatefulWidget {
   const MockExamScreen({super.key, required this.exam, required this.questions});
 
   final ExamConfig exam;
   final List<Question> questions;
 
   @override
-  State<MockExamScreen> createState() => _MockExamScreenState();
+  ConsumerState<MockExamScreen> createState() => _MockExamScreenState();
 }
 
-class _MockExamScreenState extends State<MockExamScreen> {
+class _MockExamScreenState extends ConsumerState<MockExamScreen> {
   bool _started = false;
   int _index = 0;
   final Map<String, int?> _answers = {};
@@ -23,9 +29,9 @@ class _MockExamScreenState extends State<MockExamScreen> {
   void _start() {
     final level = widget.exam.levels.first;
     final count = level.questionCount.clamp(1, widget.questions.length);
+    final store = ref.read(srsProvider).valueOrNull ?? const SrsStore({}, {});
     setState(() {
-      _picked = List<Question>.from(widget.questions)..shuffle();
-      _picked = _picked.take(count).toList();
+      _picked = _pickWeighted(widget.questions, count, store);
       _answers.clear();
       _index = 0;
       _started = true;
@@ -127,4 +133,32 @@ class _MockExamScreenState extends State<MockExamScreen> {
       ),
     );
   }
+}
+
+/// [count]問を[pool]から選ぶ。科目ごとの正答率が低いほど出題されやすくする
+/// （未解答の科目は標準の重み）。解答実績が無ければ一様ランダムと同じになる。
+List<Question> _pickWeighted(List<Question> pool, int count, SrsStore store) {
+  final statsBySubject = store.statsBySubject(pool);
+
+  double weightFor(String subjectId) {
+    final stat = statsBySubject[subjectId];
+    if (stat == null) return 1.0;
+    final accuracy = stat.$1 / stat.$2;
+    return (1.0 - accuracy) + 0.3;
+  }
+
+  final weighted = <Question>[];
+  for (final q in pool) {
+    final reps = (weightFor(q.subjectId) * 10).round().clamp(1, 20);
+    weighted.addAll(List.filled(reps, q));
+  }
+  weighted.shuffle(Random());
+
+  final picked = <Question>[];
+  final seenQids = <String>{};
+  for (final q in weighted) {
+    if (picked.length >= count) break;
+    if (seenQids.add(q.qid)) picked.add(q);
+  }
+  return picked;
 }

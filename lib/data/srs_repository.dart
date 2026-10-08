@@ -41,6 +41,25 @@ class SrsStore {
 
   int get masteredCount =>
       items.values.where((i) => i.box >= Srs.maxBox).length;
+
+  /// [Question.subjectId]ごとの解答済み正解数・解答数。解答済みの科目のみ含む
+  /// （記録タブの苦手分析・模擬試験の苦手科目優先出題で共用する）。
+  Map<String, (int correct, int total)> statsBySubject(
+    List<Question> questions,
+  ) {
+    final correctBySubject = <String, int>{};
+    final totalBySubject = <String, int>{};
+    for (final q in questions) {
+      final stat = stats[q.qid];
+      if (stat == null) continue;
+      correctBySubject[q.subjectId] = (correctBySubject[q.subjectId] ?? 0) + stat.correct;
+      totalBySubject[q.subjectId] = (totalBySubject[q.subjectId] ?? 0) + stat.attempts;
+    }
+    return {
+      for (final subjectId in totalBySubject.keys)
+        subjectId: (correctBySubject[subjectId] ?? 0, totalBySubject[subjectId]!),
+    };
+  }
 }
 
 class SrsNotifier extends AsyncNotifier<SrsStore> {
