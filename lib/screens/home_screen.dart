@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import 'teach_mascot_screen.dart';
+
 /// 「ホーム」タブ。推し・コインは後続で追加。
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.exam, required this.questionCount});
@@ -38,6 +40,18 @@ class HomeScreen extends StatelessWidget {
                     style: theme.textTheme.bodyMedium,
                   ),
                 ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.auto_awesome),
+              title: const Text('推しの答案を添削'),
+              subtitle: const Text('よくある誤解を見つけて、正しい答えに差し替えよう'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const TeachMascotScreen()),
               ),
             ),
           ),

@@ -29,6 +29,7 @@
 - 記録タブに間隔反復（Leitner方式、`yourwish_kentei`の`Srs`/`SrsItem`）を実装。学ぶタブで解答するたびに`lib/data/srs_repository.dart`（`AsyncNotifier`＋`shared_preferences`で端末内保存）に記録し、記録タブでは復習時期が来た問題数・定着済み問題数を表示。「復習を始める」から`PracticeSession`の`priorityQids`（復習対象を先頭固定）・`mode: weak`で学ぶタブ相当の画面に遷移する
 - 記録タブに苦手分析を追加。解答のたびに問題ID単位の解答回数・正解数（`AnswerStat`）も`srs_repository.dart`に記録し、`Question.subjectId`（章）ごとに集計。正答率が低い章を最大3件表示し、各行をタップするとその章の復習（不正解だった問題を優先、全問正解なら解答済み全問）に直接遷移する
 - 模擬試験の出題にも苦手科目優先を反映。`SrsStore.statsBySubject`（記録タブと共用）から科目別正答率を算出し、正答率が低い科目ほど出題されやすくなるよう重み付け抽選（`_pickWeighted`）で60問を選ぶ。解答実績が無い科目・解答実績自体が無い場合は従来どおり一様ランダムと同じ
+- ホームタブに「推しの答案を添削」（画期的な機能・共通基盤の型③、`yourwish_kentei`の`MisconceptionScenario`、`app_common_kit`の`TeachMascotWidget`）を実装。`lib/data/misconception_repository.dart`で`teach_mascot_scenarios.jsonl`（10場面）を読み込み、`lib/screens/teach_mascot_screen.dart`で1場面ずつ表示する
 - GUGA公式サイトで2027年試験向けシラバスの「大幅改訂」が告知された（公式テキストの発行元もGUGAから翔泳社に変更）。出題範囲の詳細が未確認のため問題データの作り直しは時期尚早だが、新旧の問題を区別できるよう`questions.jsonl`・`seisei_ai_passport.json`に`syllabusVersion`フィールドを追加済み。`yourwish_kentei`側の型実装提案は`content/exam/proposal/`に作成済み（詳細は`content/exam/README.md`）
 - `yourwish_kentei`側への型実装提案2件をIssue起票済み: [Issue #27](https://github.com/zka32101/yourwish_kentei/issues/27)（`AiTimelineEvent`型）・[Issue #28](https://github.com/zka32101/yourwish_kentei/issues/28)（`Question`/`ExamConfig`への`syllabusVersion`追加）。RAGパイプライン構築パズル等3章向け新規提案3件はまだ未起票
 
