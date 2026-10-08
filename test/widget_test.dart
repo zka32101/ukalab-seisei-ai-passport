@@ -81,6 +81,18 @@ void main() {
       await tester.pump(const Duration(milliseconds: 400));
 
       expect(find.textContaining('第1問'), findsOneWidget);
+
+      // ホームタブから「推しの答案を添削」に遷移できる。
+      await tester.tap(find.text('ホーム'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      await tester.tap(find.text('推しの答案を添削'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('推しの答案を添削'), findsWidgets);
+      expect(find.textContaining('1 / '), findsOneWidget);
     },
   );
 }
