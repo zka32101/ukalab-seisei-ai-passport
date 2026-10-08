@@ -1,28 +1,47 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
-/// 「学ぶ」タブ: 短い演習セッション（最小実装。間隔反復・弱点優先は後続）。
-class LearnScreen extends StatefulWidget {
-  const LearnScreen({super.key, required this.questions, this.sessionSize = 10});
+import '../data/srs_repository.dart';
+
+/// 「学ぶ」タブ: 短い演習セッション。解答ごとに間隔反復（記録タブ）の記録を更新する。
+/// [priorityQids] を渡すと、その問題を先頭に出題する（記録タブからの復習呼び出し用）。
+class LearnScreen extends ConsumerStatefulWidget {
+  const LearnScreen({
+    super.key,
+    required this.questions,
+    this.sessionSize = 10,
+    this.priorityQids = const [],
+    this.mode = PracticeMode.practice,
+  });
 
   final List<Question> questions;
   final int sessionSize;
+  final List<String> priorityQids;
+  final PracticeMode mode;
 
   @override
-  State<LearnScreen> createState() => _LearnScreenState();
+  ConsumerState<LearnScreen> createState() => _LearnScreenState();
 }
 
-class _LearnScreenState extends State<LearnScreen> {
+class _LearnScreenState extends ConsumerState<LearnScreen> {
   late PracticeSession _session = _newSession();
   int? _selected;
   bool _answered = false;
 
-  PracticeSession _newSession() => PracticeSession(
-        pool: widget.questions,
-        size: widget.sessionSize.clamp(1, widget.questions.length),
-        seed: DateTime.now().millisecondsSinceEpoch,
-      );
+  PracticeSession _newSession() {
+    final size = widget.priorityQids.isEmpty
+        ? widget.sessionSize.clamp(1, widget.questions.length)
+        : widget.priorityQids.length.clamp(1, widget.questions.length);
+    return PracticeSession(
+      pool: widget.questions,
+      size: size,
+      mode: widget.mode,
+      seed: DateTime.now().millisecondsSinceEpoch,
+      priorityQids: widget.priorityQids,
+    );
+  }
 
   void _restart() {
     setState(() {
@@ -34,11 +53,15 @@ class _LearnScreenState extends State<LearnScreen> {
 
   void _select(int i) {
     if (_answered) return;
+    final q = _session.current!;
     setState(() {
       _selected = i;
       _answered = true;
     });
     _session.answer(i);
+    ref
+        .read(srsProvider.notifier)
+        .recordAnswer(qid: q.qid, correct: i == q.answerIndex);
   }
 
   void _next() {
