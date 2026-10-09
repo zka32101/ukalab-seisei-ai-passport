@@ -1,4 +1,4 @@
-import 'package:app_common_kit/app_common_kit.dart' show FakeEntitlementService, entitlementServiceProvider;
+import 'package:app_common_kit/app_common_kit.dart' show FakeEntitlementService, InMemoryHandsFreeStore, entitlementServiceProvider, handsFreeStoreProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -32,7 +32,10 @@ void main() {
     (WidgetTester tester) async {
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [entitlementServiceProvider.overrideWithValue(FakeEntitlementService())],
+          overrides: [
+            entitlementServiceProvider.overrideWithValue(FakeEntitlementService()),
+            handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
+          ],
           child: const UkalabSeiseiAiPassportApp(),
         ),
       );
