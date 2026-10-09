@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 import 'boundary_screen.dart';
 import 'confusion_matrix_screen.dart';
