@@ -9,7 +9,9 @@ import 'screens/mock_exam_screen.dart';
 import 'screens/record_screen.dart';
 import 'screens/settings_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // 課金（RevenueCat）。実際のAPIキー取得後にRevenueCatEntitlementServiceへ差し替える。
   // 価格は競合調査を踏まえた暫定値で、運営者確認が必要（決定14）。
   final entitlementService = FakeEntitlementService(
@@ -33,9 +35,17 @@ void main() {
     },
   );
 
+  final container = ProviderContainer(
+    overrides: [
+      entitlementServiceProvider.overrideWithValue(entitlementService),
+      handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('seisei_ai_passport')),
+    ],
+  );
+  await container.read(handsFreeProvider.notifier).load();
+
   runApp(
-    ProviderScope(
-      overrides: [entitlementServiceProvider.overrideWithValue(entitlementService)],
+    UncontrolledProviderScope(
+      container: container,
       child: const UkalabSeiseiAiPassportApp(),
     ),
   );
@@ -84,7 +94,7 @@ class _RootPage extends ConsumerWidget {
             LearnScreen(questions: questions),
             MockExamScreen(exam: data.exam, questions: questions),
             const RecordScreen(),
-            const SettingsScreen(),
+            SettingsScreen(questions: questions),
           ],
         );
       },
