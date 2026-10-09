@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yourwish_kentei/yourwish_kentei.dart';
 
+import 'ai_news_screen.dart';
 import 'boundary_screen.dart';
 import 'confusion_matrix_screen.dart';
 import 'failure_gallery_screen.dart';
@@ -24,6 +25,12 @@ class _ExperienceEntry {
 }
 
 final _experienceEntries = [
+  _ExperienceEntry(
+    icon: Icons.newspaper,
+    title: '今月のAI動向',
+    subtitle: '一次情報にもとづく最新動向を、自分の言葉での要約で',
+    builder: (_) => const AiNewsScreen(),
+  ),
   _ExperienceEntry(
     icon: Icons.auto_awesome,
     title: '推しの答案を添削',
