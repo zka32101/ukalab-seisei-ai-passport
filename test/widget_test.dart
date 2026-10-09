@@ -1,3 +1,4 @@
+import 'package:app_common_kit/app_common_kit.dart' show FakeEntitlementService, entitlementServiceProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,7 +31,10 @@ void main() {
     'ホーム表示→学ぶタブで演習→記録タブに復習予定が反映される',
     (WidgetTester tester) async {
       await tester.pumpWidget(
-        const ProviderScope(child: UkalabSeiseiAiPassportApp()),
+        ProviderScope(
+          overrides: [entitlementServiceProvider.overrideWithValue(FakeEntitlementService())],
+          child: const UkalabSeiseiAiPassportApp(),
+        ),
       );
       await tester.pump();
 

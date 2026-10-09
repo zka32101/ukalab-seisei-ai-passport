@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'purchase_section.dart';
+
 /// 「設定」タブ。課金・広告・通知の設定は後続。
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -9,6 +11,8 @@ class SettingsScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: const [
+        PurchaseSection(),
+        Divider(height: 32),
         ListTile(
           title: Text('このアプリについて'),
           subtitle: Text(
