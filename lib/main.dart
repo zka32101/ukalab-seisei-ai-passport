@@ -2,6 +2,7 @@ import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'data/exam_date_store.dart';
 import 'data/exam_repository.dart';
 import 'screens/home_screen.dart';
 import 'screens/learn_screen.dart';
@@ -39,9 +40,11 @@ Future<void> main() async {
     overrides: [
       entitlementServiceProvider.overrideWithValue(entitlementService),
       handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('seisei_ai_passport')),
+      examDateStoreProvider.overrideWithValue(ExamDateStore('seisei_ai_passport')),
     ],
   );
   await container.read(handsFreeProvider.notifier).load();
+  await container.read(examDateProvider.notifier).load();
 
   runApp(
     UncontrolledProviderScope(
