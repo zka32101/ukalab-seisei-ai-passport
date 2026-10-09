@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 Future<List<Term>> loadTerms() async {
   final text = await rootBundle.loadString('content/exam/terms.jsonl');

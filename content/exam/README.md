@@ -44,7 +44,7 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 3. 分野バランス: topicIdは400問すべてユニークで、章内の偏りはなし。
    なお出題バランスの点検で、正解選択肢の位置（`answerIndex`）が393/400問で先頭（0番目）に偏っている不備を発見。選択肢の並びをシャッフルして修正済み（0:104／1:88／2:104／3:104に均等化。qid・prompt・explanation等は変更なし）。
 
-**2026-10-07 `syllabusVersion`フィールドを追加**: GUGA公式サイトで2027年試験向けシラバスの「大幅改訂」が告知された（2026-10-01〜02付、公式テキストの発行元もGUGAから翔泳社に変更）。出題範囲の詳細はまだ確認できておらず問題データの作り直しは時期尚早だが、改訂内容が確定した際に新旧の問題を区別できるよう、`questions.jsonl`全400問・`seisei_ai_passport.json`に`syllabusVersion: "2027-02"`（現在確認できているGUGA公式シラバス「2027年2月試験より適用」版を示す識別子）を追加した。`yourwish_kentei`の`Question`・`ExamConfig`にはまだ対応フィールドが無いため、型実装の叩き台を`proposal/question_syllabus_version.md`に作成した（新しいnullableフィールドの追加のみで、既存の`fromJson`/`toJson`への影響はない）。実際にこの環境にFlutter SDKを導入し、`dart run yourwish_kentei:validate_content`を実行して、未知のフィールドが追加されても既存のCI検証（全21ファイル）が「問題0件」で通ることを確認済み。
+**2026-10-07 `syllabusVersion`フィールドを追加**: GUGA公式サイトで2027年試験向けシラバスの「大幅改訂」が告知された（2026-10-01〜02付、公式テキストの発行元もGUGAから翔泳社に変更）。出題範囲の詳細はまだ確認できておらず問題データの作り直しは時期尚早だが、改訂内容が確定した際に新旧の問題を区別できるよう、`questions.jsonl`全400問・`seisei_ai_passport.json`に`syllabusVersion: "2027-02"`（現在確認できているGUGA公式シラバス「2027年2月試験より適用」版を示す識別子）を追加した。`yourwish_kentei`の`Question`・`ExamConfig`にはまだ対応フィールドが無いため、型実装の叩き台を`proposal/question_syllabus_version.md`に作成した（新しいnullableフィールドの追加のみで、既存の`fromJson`/`toJson`への影響はない）。実際にこの環境にFlutter SDKを導入し、`dart run ukalab_core:validate_content`を実行して、未知のフィールドが追加されても既存のCI検証（全21ファイル）が「問題0件」で通ることを確認済み。
 
 **2026-10-07 `yourwish_kentei`側にIssue起票**: [Issue #28](https://github.com/zka32101/yourwish_kentei/issues/28)として`Question`・`ExamConfig`への`syllabusVersion`追加を提案済み。
 
@@ -280,7 +280,7 @@ GUGA公式シラバス「2027年2月試験より適用」版に基づく章構�
 `yourwish_kentei` の検証CLIを使う。
 
 ```bash
-dart run yourwish_kentei:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl --boundary content/exam/boundary_scenarios.jsonl --attention-viz content/exam/attention_viz_scenarios.jsonl --ethics-case content/exam/ethics_case_scenarios.jsonl --ml-lab content/exam/ml_lab_datasets.jsonl --nn-builder content/exam/nn_builder_datasets.jsonl --confusion-matrix content/exam/confusion_matrix_scenarios.jsonl --conv-lab content/exam/conv_lab_images.jsonl --method-choice content/exam/method_choice_scenarios.jsonl --story content/exam/story_scenarios.jsonl --predict content/exam/predict_run_scenarios.jsonl --misconception content/exam/teach_mascot_scenarios.jsonl --failure content/exam/failure_gallery_cases.jsonl content/exam/questions.jsonl
+dart run ukalab_core:validate_content content/exam/seisei_ai_passport.json --terms content/exam/terms.jsonl --ai-news content/news/news.jsonl --boundary content/exam/boundary_scenarios.jsonl --attention-viz content/exam/attention_viz_scenarios.jsonl --ethics-case content/exam/ethics_case_scenarios.jsonl --ml-lab content/exam/ml_lab_datasets.jsonl --nn-builder content/exam/nn_builder_datasets.jsonl --confusion-matrix content/exam/confusion_matrix_scenarios.jsonl --conv-lab content/exam/conv_lab_images.jsonl --method-choice content/exam/method_choice_scenarios.jsonl --story content/exam/story_scenarios.jsonl --predict content/exam/predict_run_scenarios.jsonl --misconception content/exam/teach_mascot_scenarios.jsonl --failure content/exam/failure_gallery_cases.jsonl content/exam/questions.jsonl
 ```
 
 問題が1件でもあれば終了コード1。チェック内容（出典必須・ID重複・選択肢数・正解の一意性 等）は `yourwish_kentei` の `question_validator.dart` を参照。

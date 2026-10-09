@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ukalab_seisei_ai_passport/data/history_store.dart';
 import 'package:ukalab_seisei_ai_passport/screens/learn_screen.dart';
 import 'package:ukalab_seisei_ai_passport/screens/premium_practice_cards.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
 final _now = DateTime(2026, 11, 20, 12);
 
