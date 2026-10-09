@@ -10,7 +10,35 @@ import 'screens/record_screen.dart';
 import 'screens/settings_screen.dart';
 
 void main() {
-  runApp(const ProviderScope(child: UkalabSeiseiAiPassportApp()));
+  // 課金（RevenueCat）。実際のAPIキー取得後にRevenueCatEntitlementServiceへ差し替える。
+  // 価格は競合調査を踏まえた暫定値で、運営者確認が必要（決定14）。
+  final entitlementService = FakeEntitlementService(
+    availableOffers: const [
+      EntitlementOffer(
+        id: 'noads',
+        productId: 'seisei_ai_passport_noads',
+        title: '広告非表示',
+        priceString: '¥480',
+      ),
+      EntitlementOffer(
+        id: 'premium',
+        productId: 'seisei_ai_passport_premium',
+        title: 'プレミアム（広告非表示＋追加機能）',
+        priceString: '¥1,500',
+      ),
+    ],
+    grantOnPurchase: const {
+      'seisei_ai_passport_noads': EntitlementState(hasNoAds: true),
+      'seisei_ai_passport_premium': EntitlementState(hasPremium: true),
+    },
+  );
+
+  runApp(
+    ProviderScope(
+      overrides: [entitlementServiceProvider.overrideWithValue(entitlementService)],
+      child: const UkalabSeiseiAiPassportApp(),
+    ),
+  );
 }
 
 class UkalabSeiseiAiPassportApp extends StatelessWidget {
