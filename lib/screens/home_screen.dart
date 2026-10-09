@@ -5,6 +5,7 @@ import 'boundary_screen.dart';
 import 'confusion_matrix_screen.dart';
 import 'failure_gallery_screen.dart';
 import 'predict_run_screen.dart';
+import 'premium_practice_cards.dart';
 import 'route_planner_screen.dart';
 import 'teach_mascot_screen.dart';
 import 'term_map_screen.dart';
@@ -70,10 +71,18 @@ final _experienceEntries = [
 
 /// 「ホーム」タブ。推し・コインは後続で追加。
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.exam, required this.questionCount});
+  const HomeScreen({
+    super.key,
+    required this.exam,
+    required this.questionCount,
+    this.questions = const [],
+  });
 
   final ExamConfig exam;
   final int questionCount;
+
+  /// 弱点ドリル・試験直前モードの出題元（解答履歴と突き合わせる）。
+  final List<Question> questions;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +117,8 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 8),
+          PremiumPracticeCards(exam: exam, questions: questions),
           for (final entry in _experienceEntries) ...[
             const SizedBox(height: 8),
             Card(
