@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ukalab_core/ui.dart' show studyNotesOverrides;
 
 import 'package:ukalab_seisei_ai_passport/main.dart';
 
@@ -35,6 +36,7 @@ void main() {
           overrides: [
             entitlementServiceProvider.overrideWithValue(FakeEntitlementService()),
             handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
+            ...(await tester.runAsync(() => studyNotesOverrides('test')))!,
           ],
           child: const UkalabSeiseiAiPassportApp(),
         ),

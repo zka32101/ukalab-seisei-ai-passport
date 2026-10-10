@@ -7,6 +7,7 @@ import 'package:ukalab_seisei_ai_passport/data/exam_date_store.dart';
 import 'package:ukalab_seisei_ai_passport/data/history_store.dart';
 import 'package:ukalab_seisei_ai_passport/screens/learn_screen.dart';
 import 'package:ukalab_seisei_ai_passport/screens/premium_practice_cards.dart';
+import 'package:ukalab_core/ui.dart' show studyNotesOverrides;
 import 'package:ukalab_core/ukalab_core.dart';
 
 final _now = DateTime(2026, 11, 20, 12);
@@ -43,6 +44,7 @@ Future<ProviderContainer> _pump(
   SharedPreferences.setMockInitialValues({});
   final container = ProviderContainer(overrides: [
     handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
+    ...(await tester.runAsync(() => studyNotesOverrides('test')))!,
     entitlementStateProvider.overrideWith(
       (ref) => Stream.value(EntitlementState(hasPremium: premium)),
     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ukalab_core/ui.dart';
 import 'package:ukalab_core/ukalab_core.dart';
 
 import 'ai_news_screen.dart';
@@ -126,6 +127,8 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           PremiumPracticeCards(exam: exam, questions: questions),
+          const SizedBox(height: 8),
+          StudyNotesHomeCards(loadQuestions: () async => questions),
           for (final entry in _experienceEntries) ...[
             const SizedBox(height: 8),
             Card(
