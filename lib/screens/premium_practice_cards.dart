@@ -25,15 +25,17 @@ class PremiumPracticeCards extends ConsumerWidget {
   /// 現在時刻の取得元（テストで固定する）。
   final DateTime Function() clock;
 
-  bool _isPremium(WidgetRef ref) =>
-      canUsePremiumFeature(
-        PremiumFeature.weakDrill,
-        isPremium: (ref.read(entitlementStateProvider).valueOrNull ?? EntitlementState.free)
+  bool _isPremium(WidgetRef ref) => canUsePremiumFeature(
+    PremiumFeature.weakDrill,
+    isPremium:
+        (ref.read(entitlementStateProvider).valueOrNull ??
+                EntitlementState.free)
             .hasPremium,
-      );
+  );
 
-  void _toast(BuildContext context, String message) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  void _toast(BuildContext context, String message) => ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(SnackBar(content: Text(message)));
 
   void _open(BuildContext context, String title, List<Question> drill) {
     Navigator.of(context).push(
@@ -51,7 +53,11 @@ class PremiumPracticeCards extends ConsumerWidget {
       _toast(context, '弱点ドリルはプレミアムの機能です。設定から購入できます。');
       return;
     }
-    final drill = buildWeakDrill(questions, ref.read(historyProvider), now: clock());
+    final drill = buildWeakDrill(
+      questions,
+      ref.read(historyProvider),
+      now: clock(),
+    );
     if (drill.isEmpty) {
       _toast(context, 'まだ弱点がありません。「学ぶ」で演習すると、苦手な論点が見つかります。');
       return;
@@ -64,7 +70,11 @@ class PremiumPracticeCards extends ConsumerWidget {
       _toast(context, '試験直前モードはプレミアムの機能です。設定から購入できます。');
       return;
     }
-    final items = buildExamEveSet(questions, ref.read(historyProvider), now: clock());
+    final items = buildExamEveSet(
+      questions,
+      ref.read(historyProvider),
+      now: clock(),
+    );
     if (items.isEmpty) {
       _toast(context, '直前に見直す問題がまだありません。');
       return;
@@ -75,31 +85,85 @@ class PremiumPracticeCards extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // タップ時に読むだけだと未購読で読み込み中のまま「無料」と判定されるため、ここで購読しておく。
-    ref.watch(entitlementStateProvider);
-    final eve = examEveStatus(effectiveExamDates(ref.watch(examDateProvider), exam.examDates), clock());
+    final entitlement = ref.watch(entitlementStateProvider);
+    final isPremium = canUsePremiumFeature(
+      PremiumFeature.weakDrill,
+      isPremium: (entitlement.valueOrNull ?? EntitlementState.free).hasPremium,
+    );
+    final eve = examEveStatus(
+      effectiveExamDates(ref.watch(examDateProvider), exam.examDates),
+      clock(),
+    );
     return Column(
       children: [
         Card(
           child: ListTile(
             leading: const Icon(Icons.trending_down),
             title: const Text('弱点ドリル'),
-            subtitle: const Text('間違えやすい論点を集中して解きます。（プレミアム）'),
-            trailing: const Icon(Icons.chevron_right),
+            subtitle: const Text('直近の解答履歴から、間違えやすい論点を集中して解きます。'),
+            trailing: _PremiumTrailing(isPremium: isPremium),
             onTap: () => _weakDrill(context, ref),
           ),
         ),
         if (eve != null && eve.active) ...[
           const SizedBox(height: 16),
           Card(
-            child: ListTile(
-              leading: const Icon(Icons.event_available),
-              title: Text(eve.daysLeft == 0 ? '試験直前モード（今日が試験日）' : '試験直前モード（あと${eve.daysLeft}日）'),
-              subtitle: const Text('直近の誤答・頻出・計算式を優先して見直します。（プレミアム）'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => _examEve(context, ref),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.event_available),
+                    title: Text(
+                      eve.daysLeft == 0
+                          ? '試験直前モード（今日が試験日）'
+                          : '試験直前モード（あと${eve.daysLeft}日）',
+                    ),
+                    subtitle: const Text('直近の誤答・頻出・計算式を優先して見直します。'),
+                    trailing: _PremiumTrailing(isPremium: isPremium),
+                    onTap: () => _examEve(context, ref),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value:
+                            1 - (eve.daysLeft / examEveWindowDays).clamp(0, 1),
+                        minHeight: 4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
+      ],
+    );
+  }
+}
+
+/// プレミアム限定カードのトレイリング表示。未購入なら鍵アイコンで事前に分かるようにする。
+class _PremiumTrailing extends StatelessWidget {
+  const _PremiumTrailing({required this.isPremium});
+
+  final bool isPremium;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isPremium) return const Icon(Icons.chevron_right);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.lock_outline,
+          size: 18,
+          color: Theme.of(context).colorScheme.outline,
+        ),
+        const SizedBox(width: 4),
+        const Icon(Icons.chevron_right),
       ],
     );
   }

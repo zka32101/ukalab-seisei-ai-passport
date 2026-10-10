@@ -3,6 +3,7 @@ import 'package:ukalab_core/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'data/disclaimer_store.dart';
 import 'data/exam_date_store.dart';
 import 'data/exam_repository.dart';
 import 'screens/home_screen.dart';
@@ -40,12 +41,20 @@ Future<void> main() async {
   final container = ProviderContainer(
     overrides: [
       entitlementServiceProvider.overrideWithValue(entitlementService),
-      handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('seisei_ai_passport')),
-      examDateStoreProvider.overrideWithValue(ExamDateStore('seisei_ai_passport')),
+      handsFreeStoreProvider.overrideWithValue(
+        SharedPreferencesHandsFreeStore('seisei_ai_passport'),
+      ),
+      examDateStoreProvider.overrideWithValue(
+        ExamDateStore('seisei_ai_passport'),
+      ),
+      disclaimerStoreProvider.overrideWithValue(
+        DisclaimerStore('seisei_ai_passport'),
+      ),
     ],
   );
   await container.read(handsFreeProvider.notifier).load();
   await container.read(examDateProvider.notifier).load();
+  await container.read(disclaimerSeenProvider.notifier).load();
 
   runApp(
     UncontrolledProviderScope(
@@ -83,7 +92,8 @@ class _RootPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final examData = ref.watch(examDataProvider);
     return examData.when(
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (e, st) => Scaffold(
         body: ErrorState(
           message: '問題データを読み込めませんでした。\n$e',
@@ -94,7 +104,11 @@ class _RootPage extends ConsumerWidget {
         final questions = data.activeQuestions;
         return UkalabShell(
           pages: [
-            HomeScreen(exam: data.exam, questionCount: questions.length, questions: questions),
+            HomeScreen(
+              exam: data.exam,
+              questionCount: questions.length,
+              questions: questions,
+            ),
             LearnScreen(questions: questions),
             MockExamScreen(exam: data.exam, questions: questions),
             const RecordScreen(),

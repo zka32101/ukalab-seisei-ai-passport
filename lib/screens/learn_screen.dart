@@ -72,7 +72,9 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     ref
         .read(srsProvider.notifier)
         .recordAnswer(qid: q.qid, correct: i == q.answerIndex);
-    ref.read(historyProvider.notifier).record(
+    ref
+        .read(historyProvider.notifier)
+        .record(
           q,
           correct: i == q.answerIndex,
           ms: DateTime.now().difference(_shownAt).inMilliseconds,
@@ -123,6 +125,15 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: () =>
+                  ref.read(handsFreeProvider.notifier).setEnabled(true),
+              icon: const Icon(Icons.volume_up_outlined, size: 18),
+              label: const Text('ながら学習にする'),
+            ),
+          ),
           QuestionCard(
             text: q.prompt,
             index: _session.questions.indexOf(q) + 1,
@@ -135,10 +146,14 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                     label: String.fromCharCode(0x41 + i),
                     text: q.choices[i],
                     state: !_answered
-                        ? (_selected == i ? ChoiceState.selected : ChoiceState.idle)
+                        ? (_selected == i
+                              ? ChoiceState.selected
+                              : ChoiceState.idle)
                         : (i == q.answerIndex
-                            ? ChoiceState.correct
-                            : (i == _selected ? ChoiceState.incorrect : ChoiceState.idle)),
+                              ? ChoiceState.correct
+                              : (i == _selected
+                                    ? ChoiceState.incorrect
+                                    : ChoiceState.idle)),
                     onTap: () => _select(i),
                   ),
                 ],
@@ -147,10 +162,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
           ),
           if (_answered) ...[
             const SizedBox(height: 16),
-            ExplanationPanel(
-              body: q.explanation,
-              sourceRef: q.sourceRef,
-            ),
+            ExplanationPanel(body: q.explanation, sourceRef: q.sourceRef),
             const SizedBox(height: 16),
             FilledButton(onPressed: _next, child: const Text('次へ')),
           ],
