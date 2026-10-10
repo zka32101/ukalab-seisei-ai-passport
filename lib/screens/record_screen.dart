@@ -53,7 +53,9 @@ class RecordScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            dueQuestions.isEmpty ? '復習の予定はありません' : '復習の予定: ${dueQuestions.length}問',
+            dueQuestions.isEmpty
+                ? '復習の予定はありません'
+                : '復習の予定: ${dueQuestions.length}問',
             style: Theme.of(context).textTheme.titleMedium,
             textAlign: TextAlign.center,
           ),
@@ -64,7 +66,13 @@ class RecordScreen extends ConsumerWidget {
             textAlign: TextAlign.center,
           ),
           if (dueQuestions.isNotEmpty) ...[
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
+            Text(
+              '間隔反復（SRS）で、復習時期が来た問題をまとめて復習します。',
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
             FilledButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
@@ -85,37 +93,46 @@ class RecordScreen extends ConsumerWidget {
             const SizedBox(height: 32),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text('苦手分野', style: Theme.of(context).textTheme.titleMedium),
+              child: Text(
+                '苦手分野',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             for (final s in weakSubjects)
-              InkWell(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => Scaffold(
-                      appBar: AppBar(title: Text('復習: ${s.name}')),
-                      body: LearnScreen(
-                        questions: questions,
-                        priorityQids: _subjectReviewQids(questions, store, s.subjectId),
-                        mode: PracticeMode.weak,
+              SizedBox(
+                width: double.infinity,
+                child: Card(
+                  margin: const EdgeInsets.symmetric(vertical: 4),
+                  child: ListTile(
+                    title: Text(s.name),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${(s.accuracy * 100).round()}%（${s.correct}/${s.total}問）',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.chevron_right, size: 20),
+                      ],
+                    ),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => Scaffold(
+                          appBar: AppBar(title: Text('復習: ${s.name}')),
+                          body: LearnScreen(
+                            questions: questions,
+                            priorityQids: _subjectReviewQids(
+                              questions,
+                              store,
+                              s.subjectId,
+                            ),
+                            mode: PracticeMode.weak,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(s.name, style: Theme.of(context).textTheme.bodyMedium),
-                      ),
-                      Text(
-                        '${(s.accuracy * 100).round()}%（${s.correct}/${s.total}問）',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(width: 4),
-                      const Icon(Icons.chevron_right, size: 20),
-                    ],
                   ),
                 ),
               ),
