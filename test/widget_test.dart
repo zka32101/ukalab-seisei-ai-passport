@@ -96,6 +96,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
 
+      await tester.ensureVisible(find.text('推しの答案を添削'));
+      await tester.pump();
       await tester.tap(find.text('推しの答案を添削'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
