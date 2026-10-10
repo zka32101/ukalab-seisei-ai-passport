@@ -120,6 +120,22 @@ class SrsNotifier extends AsyncNotifier<SrsStore> {
       jsonEncode([for (final stat in stats.values) stat.toJson()]),
     );
   }
+
+  /// バックアップの読み込み時に呼ぶ。[store] で上書きする。
+  Future<void> replace(SrsStore store) async {
+    state = AsyncValue.data(store);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_prefsKey, jsonEncode([for (final i in store.items.values) i.toJson()]));
+    await prefs.setString(_statsPrefsKey, jsonEncode([for (final s in store.stats.values) s.toJson()]));
+  }
+
+  /// 間隔反復の記録をすべて消す。
+  Future<void> reset() async {
+    state = const AsyncValue.data(SrsStore({}, {}));
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_prefsKey);
+    await prefs.remove(_statsPrefsKey);
+  }
 }
 
 final srsProvider = AsyncNotifierProvider<SrsNotifier, SrsStore>(SrsNotifier.new);
