@@ -1,3 +1,4 @@
+import 'package:app_common_kit/app_common_kit.dart' show FakeEntitlementService, InMemoryHandsFreeStore, entitlementServiceProvider, handsFreeStoreProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,7 +31,13 @@ void main() {
     'ホーム表示→学ぶタブで演習→記録タブに復習予定が反映される',
     (WidgetTester tester) async {
       await tester.pumpWidget(
-        const ProviderScope(child: UkalabSeiseiAiPassportApp()),
+        ProviderScope(
+          overrides: [
+            entitlementServiceProvider.overrideWithValue(FakeEntitlementService()),
+            handsFreeStoreProvider.overrideWithValue(InMemoryHandsFreeStore()),
+          ],
+          child: const UkalabSeiseiAiPassportApp(),
+        ),
       );
       await tester.pump();
 
@@ -112,6 +119,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       await _waitUntilFound(tester, find.text('用語マップ'));
+      await tester.ensureVisible(find.text('用語マップ'));
+      await tester.pump();
 
       await tester.tap(find.text('用語マップ'));
       await tester.pump();

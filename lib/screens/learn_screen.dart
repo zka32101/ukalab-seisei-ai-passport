@@ -1,9 +1,11 @@
 import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:yourwish_kentei/yourwish_kentei.dart';
+import 'package:ukalab_core/ukalab_core.dart';
 
+import '../data/history_store.dart';
 import '../data/srs_repository.dart';
+import '../widgets/hands_free_choice_body.dart';
 
 /// 「学ぶ」タブ: 短い演習セッション。解答ごとに間隔反復（記録タブ）の記録を更新する。
 /// [priorityQids] を渡すと、その問題を先頭に出題する（記録タブからの復習呼び出し用）。
@@ -33,6 +35,9 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   int? _selected;
   bool _answered = false;
 
+  /// 出題を表示した時刻（回答にかかった時間の計測用）。
+  DateTime _shownAt = DateTime.now();
+
   PracticeSession _newSession() {
     final size = widget.priorityQids.isEmpty
         ? widget.sessionSize.clamp(1, widget.questions.length)
@@ -52,6 +57,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       _displayQuestion = _session.current;
       _selected = null;
       _answered = false;
+      _shownAt = DateTime.now();
     });
   }
 
@@ -66,6 +72,11 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
     ref
         .read(srsProvider.notifier)
         .recordAnswer(qid: q.qid, correct: i == q.answerIndex);
+    ref.read(historyProvider.notifier).record(
+          q,
+          correct: i == q.answerIndex,
+          ms: DateTime.now().difference(_shownAt).inMilliseconds,
+        );
   }
 
   void _next() {
@@ -73,6 +84,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       _displayQuestion = _session.current;
       _selected = null;
       _answered = false;
+      _shownAt = DateTime.now();
     });
   }
 
@@ -92,6 +104,17 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
             onRetry: _restart,
           ),
         ),
+      );
+    }
+
+    if (ref.watch(handsFreeProvider).enabled && !_answered) {
+      return HandsFreeChoiceBody(
+        qid: q.qid,
+        prompt: q.prompt,
+        choices: q.choices,
+        index: _session.questions.indexOf(q) + 1,
+        total: _session.questions.length,
+        onSelect: _select,
       );
     }
 

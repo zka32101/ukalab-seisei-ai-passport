@@ -2,6 +2,7 @@ import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'data/exam_date_store.dart';
 import 'data/exam_repository.dart';
 import 'screens/home_screen.dart';
 import 'screens/learn_screen.dart';
@@ -9,8 +10,48 @@ import 'screens/mock_exam_screen.dart';
 import 'screens/record_screen.dart';
 import 'screens/settings_screen.dart';
 
-void main() {
-  runApp(const ProviderScope(child: UkalabSeiseiAiPassportApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 課金（RevenueCat）。実際のAPIキー取得後にRevenueCatEntitlementServiceへ差し替える。
+  // 価格は競合調査を踏まえた暫定値で、運営者確認が必要（決定14）。
+  final entitlementService = FakeEntitlementService(
+    availableOffers: const [
+      EntitlementOffer(
+        id: 'noads',
+        productId: 'seisei_ai_passport_noads',
+        title: '広告非表示',
+        priceString: '¥480',
+      ),
+      EntitlementOffer(
+        id: 'premium',
+        productId: 'seisei_ai_passport_premium',
+        title: 'プレミアム（広告非表示＋追加機能）',
+        priceString: '¥1,500',
+      ),
+    ],
+    grantOnPurchase: const {
+      'seisei_ai_passport_noads': EntitlementState(hasNoAds: true),
+      'seisei_ai_passport_premium': EntitlementState(hasPremium: true),
+    },
+  );
+
+  final container = ProviderContainer(
+    overrides: [
+      entitlementServiceProvider.overrideWithValue(entitlementService),
+      handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('seisei_ai_passport')),
+      examDateStoreProvider.overrideWithValue(ExamDateStore('seisei_ai_passport')),
+    ],
+  );
+  await container.read(handsFreeProvider.notifier).load();
+  await container.read(examDateProvider.notifier).load();
+
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: const UkalabSeiseiAiPassportApp(),
+    ),
+  );
 }
 
 class UkalabSeiseiAiPassportApp extends StatelessWidget {
@@ -52,11 +93,11 @@ class _RootPage extends ConsumerWidget {
         final questions = data.activeQuestions;
         return UkalabShell(
           pages: [
-            HomeScreen(exam: data.exam, questionCount: questions.length),
+            HomeScreen(exam: data.exam, questionCount: questions.length, questions: questions),
             LearnScreen(questions: questions),
             MockExamScreen(exam: data.exam, questions: questions),
             const RecordScreen(),
-            const SettingsScreen(),
+            SettingsScreen(questions: questions),
           ],
         );
       },
