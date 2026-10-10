@@ -2,6 +2,7 @@ import 'package:app_common_kit/app_common_kit.dart';
 import 'package:app_common_kit/hands_free_tts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ukalab_core/ui.dart';
 import 'package:ukalab_core/ukalab_core.dart';
 
 import '../data/history_store.dart';
@@ -123,6 +124,10 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: BookmarkToggleButton(qid: q.qid),
+          ),
           QuestionCard(
             text: q.prompt,
             index: _session.questions.indexOf(q) + 1,
@@ -151,6 +156,8 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
               body: q.explanation,
               sourceRef: q.sourceRef,
             ),
+            const SizedBox(height: 12),
+            QuestionMemoField(key: ValueKey(q.qid), qid: q.qid),
             const SizedBox(height: 16),
             FilledButton(onPressed: _next, child: const Text('次へ')),
           ],

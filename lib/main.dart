@@ -37,8 +37,10 @@ Future<void> main() async {
     },
   );
 
+  final studyNotes = await studyNotesOverrides('seisei_ai_passport');
   final container = ProviderContainer(
     overrides: [
+      ...studyNotes,
       entitlementServiceProvider.overrideWithValue(entitlementService),
       handsFreeStoreProvider.overrideWithValue(SharedPreferencesHandsFreeStore('seisei_ai_passport')),
       examDateStoreProvider.overrideWithValue(ExamDateStore('seisei_ai_passport')),
