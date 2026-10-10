@@ -119,6 +119,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 600));
       await _waitUntilFound(tester, find.text('用語マップ'));
+      await tester.ensureVisible(find.text('用語マップ'));
+      await tester.pump();
 
       await tester.tap(find.text('用語マップ'));
       await tester.pump();
@@ -184,6 +186,21 @@ void main() {
       await tester.pump(const Duration(milliseconds: 400));
 
       expect(find.text('今日やる3つ'), findsWidgets);
+
+      // ホームタブから「今月のAI動向」にも遷移できる。
+      await tester.pageBack();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
+      await _waitUntilFound(tester, find.text('今月のAI動向'));
+      await tester.ensureVisible(find.text('今月のAI動向'));
+      await tester.pump();
+
+      await tester.tap(find.text('今月のAI動向'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(find.text('今月のAI動向'), findsWidgets);
+      expect(find.text('一次情報を見る'), findsWidgets);
     },
   );
 }
