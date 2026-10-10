@@ -13,11 +13,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.24.0"
-      resolved-ref: "731e324af65d83fd25e2fc9de3de1141f610e2d2"
+      ref: "v1.0.0"
+      resolved-ref: "86f3248b597e0dfa897fab513cde860e9904f980"
       url: "https://github.com/zka32101/app_common_kit.git"
     source: git
-    version: "0.24.0"
+    version: "1.0.0"
   async:
     dependency: transitive
     description:
@@ -309,10 +309,10 @@ packages:
     dependency: transitive
     description:
       name: purchases_flutter
-      sha256: "298ab75a5353281d5dba407eb9e06b7c328e2744b2028b344ac789b57f860537"
+      sha256: e258a5a6b284961c688eb49d8661f2441f28469c3e73a1b9732a47cb8ce537a8
       url: "https://pub.dev"
     source: hosted
-    version: "10.14.0"
+    version: "10.15.2"
   riverpod:
     dependency: transitive
     description:
@@ -450,11 +450,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.23.0"
-      resolved-ref: "69374142e28e006086db86d176b906003518461a"
+      ref: "v0.24.0"
+      resolved-ref: "03f9946716b71fd1bcaa5aed1988f5030206f286"
       url: "https://github.com/zka32101/ukalab_core.git"
     source: git
-    version: "0.23.0"
+    version: "0.24.0"
   url_launcher:
     dependency: "direct main"
     description:
