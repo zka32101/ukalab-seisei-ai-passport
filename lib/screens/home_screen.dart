@@ -1,3 +1,4 @@
+import 'package:app_common_kit/app_common_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ukalab_core/ukalab_core.dart';
@@ -168,9 +169,9 @@ class HomeScreen extends ConsumerWidget {
                 return const SizedBox.shrink();
               },
             ),
-          _SectionHeader(title: '今日のおすすめ', theme: theme),
+          const KitSectionHeader(title: '今日のおすすめ'),
           PremiumPracticeCards(exam: exam, questions: questions),
-          _SectionHeader(title: '最新情報', theme: theme),
+          const KitSectionHeader(title: '最新情報'),
           Card(
             child: ListTile(
               leading: const Icon(Icons.newspaper),
@@ -182,7 +183,7 @@ class HomeScreen extends ConsumerWidget {
               ).push(MaterialPageRoute(builder: (_) => const AiNewsScreen())),
             ),
           ),
-          _SectionHeader(title: '体験で理解する', theme: theme),
+          const KitSectionHeader(title: '体験で理解する'),
           for (final entry in _experienceEntries) ...[
             const SizedBox(height: 8),
             Card(
@@ -190,7 +191,7 @@ class HomeScreen extends ConsumerWidget {
                 leading: Icon(entry.icon),
                 title: Text(entry.title),
                 subtitle: Text(entry.subtitle),
-                trailing: _MinutesBadge(minutes: entry.minutes),
+                trailing: MinutesBadge(minutes: entry.minutes),
                 onTap: () => Navigator.of(
                   context,
                 ).push(MaterialPageRoute(builder: entry.builder)),
@@ -199,44 +200,6 @@ class HomeScreen extends ConsumerWidget {
           ],
         ],
       ),
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, required this.theme});
-
-  final String title;
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24, bottom: 8),
-      child: Text(
-        title,
-        style: theme.textTheme.titleMedium?.copyWith(
-          color: theme.colorScheme.primary,
-        ),
-      ),
-    );
-  }
-}
-
-class _MinutesBadge extends StatelessWidget {
-  const _MinutesBadge({required this.minutes});
-
-  final int minutes;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text('約$minutes分', style: Theme.of(context).textTheme.labelSmall),
-        const SizedBox(width: 4),
-        const Icon(Icons.chevron_right),
-      ],
     );
   }
 }

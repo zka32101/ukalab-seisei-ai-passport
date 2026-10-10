@@ -101,7 +101,7 @@ class PremiumPracticeCards extends ConsumerWidget {
             leading: const Icon(Icons.trending_down),
             title: const Text('弱点ドリル'),
             subtitle: const Text('直近の解答履歴から、間違えやすい論点を集中して解きます。'),
-            trailing: _PremiumTrailing(isPremium: isPremium),
+            trailing: PremiumLockTrailing(isPremium: isPremium),
             onTap: () => _weakDrill(context, ref),
           ),
         ),
@@ -121,18 +121,14 @@ class PremiumPracticeCards extends ConsumerWidget {
                           : '試験直前モード（あと${eve.daysLeft}日）',
                     ),
                     subtitle: const Text('直近の誤答・頻出・計算式を優先して見直します。'),
-                    trailing: _PremiumTrailing(isPremium: isPremium),
+                    trailing: PremiumLockTrailing(isPremium: isPremium),
                     onTap: () => _examEve(context, ref),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value:
-                            1 - (eve.daysLeft / examEveWindowDays).clamp(0, 1),
-                        minHeight: 4,
-                      ),
+                    child: CountdownProgressBar(
+                      daysLeft: eve.daysLeft,
+                      windowDays: examEveWindowDays,
                     ),
                   ),
                 ],
@@ -140,30 +136,6 @@ class PremiumPracticeCards extends ConsumerWidget {
             ),
           ),
         ],
-      ],
-    );
-  }
-}
-
-/// プレミアム限定カードのトレイリング表示。未購入なら鍵アイコンで事前に分かるようにする。
-class _PremiumTrailing extends StatelessWidget {
-  const _PremiumTrailing({required this.isPremium});
-
-  final bool isPremium;
-
-  @override
-  Widget build(BuildContext context) {
-    if (isPremium) return const Icon(Icons.chevron_right);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          Icons.lock_outline,
-          size: 18,
-          color: Theme.of(context).colorScheme.outline,
-        ),
-        const SizedBox(width: 4),
-        const Icon(Icons.chevron_right),
       ],
     );
   }
