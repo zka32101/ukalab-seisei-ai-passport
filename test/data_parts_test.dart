@@ -17,6 +17,10 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     late WidgetRef ref;
     await tester.pumpWidget(ProviderScope(
+      overrides: [
+        questionMemoServiceProvider
+            .overrideWithValue(QuestionMemoService(store: SharedPreferencesQuestionMemoStore('test'))),
+      ],
       child: MaterialApp(
         home: Scaffold(
           body: Consumer(builder: (context, r, _) {
